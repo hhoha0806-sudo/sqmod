@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQ MOD VIP - Danh Mục</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-image: url('https://i.ibb.co/0VKpd4C4/file-00000000031081fab71b349b2f53c583.png'); 
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; 
+            padding: 40px 20px; 
+            color: #fff;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: -1;
+        }
+
+        .glass-container {
+            width: 100%;
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 30px;
+            padding: 30px 20px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            text-align: center;
+            position: relative;
+        }
+
+        .logo-wrapper {
+            position: relative;
+            width: 110px; height: 110px;
+            margin: 0 auto 15px;
+            border-radius: 50%;
+            padding: 4px;
+            background: linear-gradient(135deg, #00e5ff, #0055ff, #00e5ff);
+            box-shadow: 0 0 25px rgba(0, 229, 255, 0.5);
+        }
+        .logo-wrapper img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid #111;}
+
+        .title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 26px; font-weight: 900;
+            color: #ffd700; 
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .socials-center { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; }
+        .social-btn {
+            width: 45px; height: 45px; border-radius: 14px;
+            background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center;
+            font-size: 20px; text-decoration: none; transition: 0.3s;
+        }
+        .social-btn.telegram { color: #0088cc; }
+        .social-btn.youtube { color: #ff0000; }
+        .social-btn.tiktok { color: #00f2fe; }
+        .social-btn:hover { background: rgba(255, 255, 255, 0.2); transform: translateY(-3px); }
+
+        .subtitle { font-size: 13px; color: #00e5ff; margin-bottom: 30px; letter-spacing: 1px; text-transform: uppercase; text-shadow: 0 0 5px rgba(0,229,255,0.5); }
+
+        .page { display: none; animation: fadeIn 0.3s; }
+        #page-home { display: block; } 
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Hiệu ứng gợn sóng khi bấm */
+        .ripple-btn { position: relative; overflow: hidden; -webkit-tap-highlight-color: transparent; }
+        .ripple {
+            position: absolute; border-radius: 50%; transform: scale(0);
+            animation: ripple-anim 0.6s linear; background-color: rgba(0, 229, 255, 0.4); pointer-events: none;
+        }
+        @keyframes ripple-anim { to { transform: scale(4); opacity: 0; } }
+
+        /* Menu chính */
+        .main-category-btn {
+            display: flex; align-items: center; justify-content: space-between;
+            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 18px; padding: 20px 25px; margin-bottom: 15px;
+            cursor: pointer; transition: all 0.3s ease; text-decoration: none; backdrop-filter: blur(10px);
+        }
+        .main-category-btn:hover { background: rgba(0, 229, 255, 0.15); border-color: #00e5ff; transform: translateY(-2px); }
+        .main-category-title { font-family: 'Orbitron', sans-serif; font-size: 18px; font-weight: 700; color: #00e5ff; letter-spacing: 2px; display: flex; align-items: center; gap: 10px; }
+        .main-category-btn .fa-chevron-right { color: #aaa; font-size: 16px; }
+
+        /* Thanh công cụ trên cùng của trang con */
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .back-btn, .how-to-btn {
+            display: inline-flex; align-items: center;
+            background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255,255,255,0.2);
+            padding: 8px 15px; border-radius: 10px; color: #fff; font-weight: bold; font-size: 12px;
+            cursor: pointer; transition: 0.3s; text-decoration: none; backdrop-filter: blur(5px);
+            text-transform: uppercase;
+        }
+        .back-btn:hover, .how-to-btn:hover { background: rgba(255, 255, 255, 0.2); }
+        .back-btn i { margin-right: 8px; }
+        .how-to-btn { color: #ffd700; border-color: rgba(255, 215, 0, 0.4); background: rgba(255, 215, 0, 0.1); }
+
+        .page-title { font-family: 'Orbitron', sans-serif; font-size: 20px; color: #00e5ff; margin-bottom: 20px; text-shadow: 0 0 10px rgba(0, 229, 255, 0.5); text-align: left; }
+
+        /* Item Card (Ảnh + Chữ) */
+        .item-card {
+            display: flex; align-items: center;
+            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px; padding: 12px; margin-bottom: 15px;
+            text-decoration: none; color: #fff; transition: 0.3s; text-align: left;
+            position: relative; backdrop-filter: blur(10px);
+        }
+        .item-card:hover { background: rgba(255, 255, 255, 0.1); border-color: rgba(0, 229, 255, 0.5); }
+
+        .item-img { width: 90px; height: 90px; border-radius: 14px; object-fit: cover; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; }
+        .item-info { margin-left: 15px; flex: 1; }
+        .item-title { font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: 800; color: #00fa9a; line-height: 1.2; margin-bottom: 5px; text-transform: uppercase; }
+        .item-desc { font-size: 12px; color: #ccc; }
+
+        .badge-ffth { position: absolute; top: 0; left: 0; background: #ff0033; color: #fff; font-size: 11px; font-weight: 900; padding: 4px 10px; border-radius: 20px 0 15px 0; font-family: 'Orbitron', sans-serif; }
+
+        .footer-text { font-size: 11px; color: #aaa; margin-top: 25px; letter-spacing: 1px; text-transform: uppercase; }
+
+        /* --- CSS CHO POPUP HƯỚNG DẪN CÀI ĐẶT --- */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px);
+            z-index: 999; justify-content: center; align-items: center; padding: 20px;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-content {
+            background: rgba(30, 30, 40, 0.95); border: 1px solid #00e5ff;
+            border-radius: 20px; padding: 25px; max-width: 350px; width: 100%;
+            text-align: left; box-shadow: 0 0 30px rgba(0, 229, 255, 0.3);
+            position: relative; animation: zoomIn 0.3s;
+        }
+        @keyframes zoomIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        .modal-title {
+            font-family: 'Orbitron', sans-serif; color: #ffd700; font-size: 18px;
+            margin-bottom: 15px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;
+        }
+        .modal-body { font-size: 14px; color: #ddd; line-height: 1.6; }
+        .modal-body ol { padding-left: 20px; }
+        .modal-body li { margin-bottom: 10px; }
+        .highlight { color: #00e5ff; font-weight: bold; }
+        .warning { color: #ff4d4d; font-weight: bold; font-style: italic; display: block; margin-top: 10px; font-size: 13px;}
+        .close-btn {
+            margin-top: 20px; width: 100%; padding: 12px;
+            background: linear-gradient(90deg, #00e5ff, #0055ff); color: #fff;
+            font-weight: bold; border: none; border-radius: 10px; font-size: 14px;
+            cursor: pointer; font-family: 'Orbitron', sans-serif;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="glass-container">
+        
+        <!-- TRANG CHỦ -->
+        <div id="page-home" class="page">
+            <div class="logo-wrapper">
+                <img src="https://i.ibb.co/0VKpd4C4/file-00000000031081fab71b349b2f53c583.png" alt="SQ MOD">
+            </div>
+            <h1 class="title">SQ MOD VIP</h1>
+            
+            <div class="socials-center">
+                <a href="https://t.me/syquyen" class="social-btn telegram" target="_blank"><i class="fa-brands fa-telegram"></i></a>
+                <a href="https://www.youtube.com/@sqmod" class="social-btn youtube" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+                <a href="https://tiktok.com/@sqmodvip" class="social-btn tiktok" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
+            </div>
+
+            <div class="subtitle">CHỌN DANH MỤC BẠN CẦN</div>
+
+            <div onclick="showPage('page-proxy')" class="main-category-btn ripple-btn">
+                <div class="main-category-title"><i class="fa-solid fa-bars"></i> MENU</div>
+                <i class="fa-solid fa-chevron-right"></i>
+            </div>
+
+            <div onclick="showPage('page-dinhvi')" class="main-category-btn ripple-btn">
+                <div class="main-category-title"><i class="fa-solid fa-location-crosshairs"></i> ĐỊNH VỊ</div>
+                <i class="fa-solid fa-chevron-right"></i>
+            </div>
+
+            <div onclick="showPage('page-skin')" class="main-category-btn ripple-btn">
+                <div class="main-category-title"><i class="fa-solid fa-shirt"></i> MOD SKIN</div>
+                <i class="fa-solid fa-chevron-right"></i>
+            </div>
+
+            <div class="footer-text">SQ MOD VIP - UY TÍN TẠO NÊN THƯƠNG HIỆU</div>
+        </div>
+
+        <!-- TRANG CON: MENU (Hướng dẫn cài App) -->
+        <div id="page-proxy" class="page">
+            <div class="page-header">
+                <div class="back-btn ripple-btn" onclick="showPage('page-home')"><i class="fa-solid fa-arrow-left"></i> Quay lại</div>
+                <div class="how-to-btn ripple-btn" onclick="openModal('modal-app')">Cách Cài</div>
+            </div>
+            <div class="page-title">DANH MỤC MENU</div>
+
+            <a href="https://link4m.net/go/8ERHO0n" class="item-card ripple-btn">
+                <span class="badge-ffth">VIP</span>
+                <img src="https://i.ibb.co/0x371y9/Screenshot-2026-11-10-16-19-24-475-com-dts-freefireth.jpg" class="item-img" alt="Shin Mod">
+                <div class="item-info">
+                    <div class="item-title">SHIN MOD<br>CRACK NO KEY</div>
+                    <div class="item-desc">Vượt 1</div>
+                </div>
+            </a>
+        </div>
+
+        <!-- TRANG CON: ĐỊNH VỊ (Hướng dẫn chép File) -->
+        <div id="page-dinhvi" class="page">
+            <div class="page-header">
+                <div class="back-btn ripple-btn" onclick="showPage('page-home')"><i class="fa-solid fa-arrow-left"></i> Quay lại</div>
+                <div class="how-to-btn ripple-btn" onclick="openModal('modal-file')">Cách Cài</div>
+            </div>
+            <div class="page-title">DANH MỤC ĐỊNH VỊ</div>
+
+            <a href="https://link4m.org/VjJORt" class="item-card ripple-btn">
+                <span class="badge-ffth">FFTH</span>
+                <img src="https://i.ibb.co/Q7PyZMt5/Screenshot-2026-11-10-15-11-28-102-com-dts-freefireth.jpg" class="item-img" alt="Định vị trắng tím">
+                <div class="item-info">
+                    <div class="item-title">ĐỊNH VỊ TRẮNG TÍM</div>
+                    <div class="item-desc">Vượt 1</div>
+                </div>
+            </a>
+
+            <a href="https://link4m.net/l6eevJ" class="item-card ripple-btn">
+                <span class="badge-ffth">FFTH</span>
+                <img src="https://i.ibb.co/nM2DT36x/Screenshot-2026-11-10-15-07-56-514-com-dts-freefireth.jpg" class="item-img" alt="Định vị súng và trang phục trắng xanh">
+                <div class="item-info">
+                    <div class="item-title">SÚNG & TRANG PHỤC<br>TRẮNG XANH</div>
+                    <div class="item-desc">Vượt 1</div>
+                </div>
+            </a>
+        </div>
+
+        <!-- TRANG CON: MOD SKIN (Hướng dẫn chép File) -->
+        <div id="page-skin" class="page">
+            <div class="page-header">
+                <div class="back-btn ripple-btn" onclick="showPage('page-home')"><i class="fa-solid fa-arrow-left"></i> Quay lại</div>
+                <div class="how-to-btn ripple-btn" onclick="openModal('modal-file')">Cách Cài</div>
+            </div>
+            <div class="page-title">DANH MỤC MOD SKIN</div>
+
+            <a href="https://link4m.net/z5FqA7PV" class="item-card ripple-btn">
+                <span class="badge-ffth">FFTH</span>
+                <img src="https://i.ibb.co/cXyvr9H0/Screenshot-2026-11-10-13-53-38-932-com-dts-freefireth.jpg" class="item-img" alt="Báo Hồng">
+                <div class="item-info">
+                    <div class="item-title">BÁO HỒNG</div>
+                    <div class="item-desc">Vượt 1</div>
+                </div>
+            </a>
+
+            <a href="https://link4m.net/0gFfm0vf" class="item-card ripple-btn">
+                <span class="badge-ffth">FFTH</span>
+                <img src="https://i.ibb.co/GvQNBpW0/Screenshot-2026-11-10-13-52-15-081-com-dts-freefireth.jpg" class="item-img" alt="Roblox">
+                <div class="item-info">
+                    <div class="item-title">ROBLOX</div>
+                    <div class="item-desc">Vượt 1</div>
+                </div>
+            </a>
+
+            <a href="https://link4m.net/hkxIg" class="item-card ripple-btn">
+                <span class="badge-ffth">FFTH</span>
+                <img src="https://i.ibb.co/5h0V3JXM/Screenshot-2026-11-10-13-20-33-984-com-dts-freefireth.jpg" class="item-img" alt="Người Nhện Đen">
+                <div class="item-info">
+                    <div class="item-title">NGƯỜI NHỆN ĐEN</div>
+                    <div class="item-desc">Vượt 1</div>
+                </div>
+            </a>
+
+            <a href="https://link4m.org/Vhmr2SUN" class="item-card ripple-btn">
+                <span class="badge-ffth">FFTH</span>
+                <img src="https://i.ibb.co/67LB926n/Screenshot-2026-11-10-13-18-35-849-com-dts-freefireth.jpg" class="item-img" alt="Luffy Gear5">
+                <div class="item-info">
+                    <div class="item-title">LUFFY GEAR5</div>
+                    <div class="item-desc">Vượt 1</div>
+                </div>
+            </a>
+
+            <a href="https://link4m.org/cQ6MlFaJ" class="item-card ripple-btn">
+                <span class="badge-ffth">FFTH</span>
+                <img src="https://i.ibb.co/JwnHbcNQ/Screenshot-2026-11-10-13-16-04-569-com-dts-freefireth.jpg" class="item-img" alt="Cao Bồi">
+                <div class="item-info">
+                    <div class="item-title">CAO BỒI</div>
+                    <div class="item-desc">Vượt 1</div>
+                </div>
+            </a>
+        </div>
+
+    </div>
+
+    <!-- POPUP 1: HƯỚNG DẪN CÀI APP (Dành cho MENU) -->
+    <div class="modal-overlay" id="modal-app">
+        <div class="modal-content">
+            <div class="modal-title">HƯỚNG DẪN CÀI APP</div>
+            <div class="modal-body">
+                <ol>
+                    <li>Tải file APK về máy điện thoại.</li>
+                    <li>Mở file vừa tải, bấm <span class="highlight">Cài đặt (Install)</span>.</li>
+                    <li>Nếu điện thoại báo chặn nguồn không xác định, hãy chọn <span class="highlight">Vẫn cài đặt</span>.</li>
+                    <li>Mở ứng dụng, cấp quyền <span class="highlight">Hiển thị trên ứng dụng khác</span> (Overlay) để menu hack hoạt động.</li>
+                    <li>Vào game Free Fire, bật Menu lên và tận hưởng!</li>
+                </ol>
+            </div>
+            <button class="close-btn" onclick="closeModal('modal-app')">ĐÃ HIỂU</button>
+        </div>
+    </div>
+
+    <!-- POPUP 2: HƯỚNG DẪN CHÉP FILE (Dành cho ĐỊNH VỊ và MOD SKIN) -->
+    <div class="modal-overlay" id="modal-file">
+        <div class="modal-content">
+            <div class="modal-title">HƯỚNG DẪN CHÉP FILE</div>
+            <div class="modal-body">
+                <ol>
+                    <li><b>Tải File:</b> Bấm vào file bạn muốn tải trên web.</li>
+                    <li><b>Vào ZArchiver:</b> Mở ứng dụng ZArchiver trên điện thoại.</li>
+                    <li><b>Vào File:</b> Tìm đến thư mục chứa file vừa tải (thường là Download).</li>
+                    <li><b>Sao chép File:</b> Nhấn giữ vào file, chọn <span class="highlight">Copy (Sao chép)</span>.</li>
+                    <li><b>Dán Data:</b> Truy cập đường dẫn <span class="highlight">Android/data/com.dts.freefireth/files/</span> (hoặc <span class="highlight">com.dts.freefiremax</span>) và chọn <span class="highlight">Paste (Dán)</span>.</li>
+                    <li><b>Vào Game Test:</b> Mở game lên và trải nghiệm.</li>
+                </ol>
+                <span class="warning">* LƯU Ý: Phải sử dụng đúng Free Fire hoặc Free Fire Max tùy theo file bạn chọn!</span>
+            </div>
+            <button class="close-btn" onclick="closeModal('modal-file')">ĐÃ HIỂU</button>
+        </div>
+    </div>
+
+    <script>
+        // Hàm chuyển trang
+        function showPage(pageId) {
+            let pages = document.querySelectorAll('.page');
+            pages.forEach(page => { page.style.display = 'none'; });
+            let selectedPage = document.getElementById(pageId);
+            if (selectedPage) { selectedPage.style.display = 'block'; }
+            window.scrollTo(0, 0); 
+        }
+
+        // Hàm mở Popup
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        // Hàm đóng Popup
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Bấm ra ngoài vùng đen để đóng popup
+        window.onclick = function(event) {
+            let modals = document.querySelectorAll('.modal-overlay');
+            modals.forEach(modal => {
+                if (event.target == modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        }
+
+        // Hiệu ứng gợn sóng
+        const rippleButtons = document.querySelectorAll('.ripple-btn');
+        rippleButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                let x = e.clientX - e.target.getBoundingClientRect().left;
+                let y = e.clientY - e.target.getBoundingClientRect().top;
+                
+                let ripple = document.createElement('span');
+                ripple.classList.add('ripple');
+                ripple.style.left = `${x}px`;
+                ripple.style.top = `${y}px`;
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
+    </script>
+</body>
+  </html>
