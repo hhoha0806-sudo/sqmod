@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>Upgrade Data</title></head>
+<body style="background:#111;color:#fff;padding:20px;font-family:sans-serif;">
+    <h2>Đang chuyển dữ liệu Mod cũ lên Firebase...</h2>
+    <p id="status">Vui lòng đợi...</p>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBA6LXphLTRJw-cKECEPNAzODAkHB3oKHI",
+            authDomain: "sq-mod-key.firebaseapp.com",
+            projectId: "sq-mod-key",
+            storageBucket: "sq-mod-key.firebasestorage.app",
+            messagingSenderId: "1027007715479",
+            appId: "1:1027007715479:web:e341f8f70978f2058e71d2"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // DANH SÁCH CÁC MOD CŨ CỦA KOVAK
+        const oldMods = [
+            // MENU
+            { name: "SHIN MOD CRACK NO KEY", category: "page-proxy", img: "https://i.ibb.co/0x371y9/Screenshot-2026-11-10-16-19-24-475-com-dts-freefireth.jpg", link: "https://link4m.net/go/8ERHO0n" },
+            // ĐỊNH VỊ
+            { name: "ĐỊNH VỊ TRẮNG TÍM", category: "page-dinhvi", img: "https://i.ibb.co/Q7PyZMt5/Screenshot-2026-11-10-15-11-28-102-com-dts-freefireth.jpg", link: "https://link4m.org/VjJORt" },
+            { name: "SÚNG & TRANG PHỤC TRẮNG XANH", category: "page-dinhvi", img: "https://i.ibb.co/nM2DT36x/Screenshot-2026-11-10-15-07-56-514-com-dts-freefireth.jpg", link: "https://link4m.net/l6eevJ" },
+            // MOD SKIN
+            { name: "BÁO HỒNG", category: "page-skin", img: "https://i.ibb.co/cXyvr9H0/Screenshot-2026-11-10-13-53-38-932-com-dts-freefireth.jpg", link: "https://link4m.net/z5FqA7PV" },
+            { name: "ROBLOX", category: "page-skin", img: "https://i.ibb.co/GvQNBpW0/Screenshot-2026-11-10-13-52-15-081-com-dts-freefireth.jpg", link: "https://link4m.net/0gFfm0vf" },
+            { name: "NGƯỜI NHỆN ĐEN", category: "page-skin", img: "https://i.ibb.co/5h0V3JXM/Screenshot-2026-11-10-13-20-33-984-com-dts-freefireth.jpg", link: "https://link4m.net/hkxIg" },
+            { name: "LUFFY GEAR5", category: "page-skin", img: "https://i.ibb.co/67LB926n/Screenshot-2026-11-10-13-18-35-849-com-dts-freefireth.jpg", link: "https://link4m.org/Vhmr2SUN" },
+            { name: "CAO BỒI", category: "page-skin", img: "https://i.ibb.co/JwnHbcNQ/Screenshot-2026-11-10-13-16-04-569-com-dts-freefireth.jpg", link: "https://link4m.org/cQ6MlFaJ" }
+        ];
+
+        async function uploadData() {
+            try {
+                for (let i = 0; i < oldMods.length; i++) {
+                    await addDoc(collection(db, "mods"), oldMods[i]);
+                }
+                document.getElementById('status').innerHTML = "<span style='color:#00ff88'>✅ Đã chuyển toàn bộ Mod cũ lên Firebase thành công!</span>";
+            } catch(e) {
+                document.getElementById('status').innerText = "Lỗi: " + e.message;
+            }
+        }
+        uploadData();
+    </script>
+</body>
+</html>
