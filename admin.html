@@ -3,93 +3,188 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - SQ MOD</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>Hệ Thống Quản Trị - SQ MOD</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { background-color: #0b0f19; color: #fff; padding: 20px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        
+        body { 
+            background-color: #0d1117; /* Màu nền tối chuẩn GitHub */
+            color: #c9d1d9; 
+            padding: 30px 20px;
+            min-height: 100vh;
+        }
         
         /* Login Box */
         #login-box {
-            max-width: 400px; margin: 100px auto; background: #151b2b; padding: 30px; border-radius: 15px; text-align: center;
-            border: 1px solid #232d42;
+            max-width: 380px; margin: 100px auto; 
+            background: #161b22; 
+            padding: 35px 25px; 
+            border-radius: 8px; 
+            border: 1px solid #30363d;
         }
-        #login-box h2 { margin-bottom: 20px; color: #00e5ff; }
-        #login-box input { width: 100%; padding: 12px; margin-bottom: 15px; background: #0b0f19; border: 1px solid #232d42; color: #fff; border-radius: 8px; }
-        #login-box button { width: 100%; padding: 12px; background: #00e5ff; color: #000; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        #login-box h2 { margin-bottom: 20px; color: #f0f6fc; font-size: 20px; font-weight: 600; text-align: center;}
+        #login-box input { 
+            width: 100%; padding: 10px 12px; margin-bottom: 15px; 
+            background: #0d1117; border: 1px solid #30363d; 
+            color: #c9d1d9; border-radius: 6px; outline: none;
+        }
+        #login-box input:focus { border-color: #58a6ff; box-shadow: 0 0 0 3px rgba(88,166,255,0.3); }
+        #login-box button { 
+            width: 100%; padding: 10px; background: #238636; 
+            color: #fff; border: 1px solid rgba(240,246,252,0.1); border-radius: 6px; 
+            font-weight: 600; font-size: 14px; cursor: pointer; transition: 0.2s;
+        }
+        #login-box button:hover { background: #2ea043; }
 
         /* Giao diện Admin */
-        #admin-panel { display: none; max-width: 1200px; margin: 0 auto; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-        .tab { padding: 10px 20px; background: #151b2b; border: 1px solid #232d42; border-radius: 8px; cursor: pointer; font-size: 14px; }
-        .tab.active { background: #1c2638; color: #00e5ff; border-color: #00e5ff; }
+        #admin-panel { display: none; max-width: 1100px; margin: 0 auto; }
         
-        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 20px; }
-        .stat-card { background: #151b2b; padding: 20px; border-radius: 10px; border: 1px solid #232d42; }
-        .stat-card p { color: #888; font-size: 13px; margin-bottom: 5px; }
-        .stat-card h3 { font-size: 24px; }
+        .header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #30363d;
+        }
+        .header h1 { font-size: 20px; font-weight: 600; color: #f0f6fc; }
+        .header h1 i { color: #8b949e; margin-right: 8px; }
+        
+        .btn-logout { 
+            padding: 6px 15px; background: transparent; 
+            border: 1px solid #30363d; color: #c9d1d9; 
+            border-radius: 6px; font-weight: 500; cursor: pointer; transition: 0.2s; font-size: 13px;
+        }
+        .btn-logout:hover { background: #30363d; }
 
-        .actions { display: flex; justify-content: space-between; margin-bottom: 20px; gap: 10px; flex-wrap: wrap; }
-        .actions input, .actions select { padding: 10px; background: #151b2b; border: 1px solid #232d42; color: #fff; border-radius: 8px; flex: 1; min-width: 200px; }
-        .btn-add { padding: 10px 20px; background: #4b32e3; color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        /* Thống kê */
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .stat-card { 
+            background: #161b22; border: 1px solid #30363d; 
+            padding: 20px; border-radius: 6px; 
+        }
+        .stat-card p { color: #8b949e; font-size: 13px; margin-bottom: 8px; font-weight: 500;}
+        .stat-card h3 { font-size: 24px; font-weight: 600; color: #f0f6fc;}
+        
+        .stat-card.active h3 { color: #3fb950; }
+        .stat-card.download h3 { color: #d29922; }
+
+        /* Thanh công cụ */
+        .actions { display: flex; justify-content: space-between; margin-bottom: 15px; gap: 15px; flex-wrap: wrap; }
+        .actions input { 
+            padding: 8px 12px; background: #0d1117; 
+            border: 1px solid #30363d; color: #c9d1d9; 
+            border-radius: 6px; flex: 1; min-width: 250px; outline: none; font-size: 14px;
+        }
+        .actions input:focus { border-color: #58a6ff; box-shadow: 0 0 0 3px rgba(88,166,255,0.3); }
+        .btn-add { 
+            padding: 8px 16px; background: #1f6feb; color: #fff; 
+            border: 1px solid rgba(240,246,252,0.1); border-radius: 6px; font-weight: 600; 
+            cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 8px; transition: 0.2s;
+        }
+        .btn-add:hover { background: #388bfd; }
+
+        /* Tabs */
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; border-bottom: 1px solid #30363d; padding-bottom: 10px;}
+        .tab { 
+            padding: 6px 12px; background: transparent; border: none;
+            border-radius: 6px; cursor: pointer; font-size: 14px; color: #8b949e;
+            font-weight: 500; transition: 0.2s;
+        }
+        .tab:hover { background: #30363d; color: #c9d1d9;}
+        .tab.active { background: #30363d; color: #f0f6fc; }
 
         /* Bảng danh sách */
-        .table-responsive { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; background: #151b2b; border-radius: 10px; overflow: hidden; min-width: 800px; }
-        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #232d42; font-size: 14px; }
-        th { color: #888; font-weight: 600; }
-        .status-green { background: rgba(0, 255, 136, 0.1); color: #00ff88; padding: 4px 8px; border-radius: 5px; font-size: 12px; }
-        .btn-action { padding: 5px 10px; border: none; border-radius: 5px; cursor: pointer; margin-right: 5px; font-weight: bold; }
-        .btn-edit { background: #333; color: #fff; }
-        .btn-delete { background: #ff0033; color: #fff; }
+        .table-responsive { 
+            border: 1px solid #30363d; border-radius: 6px; 
+            overflow-x: auto; background: #161b22;
+        }
+        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid #30363d; font-size: 14px; }
+        th { color: #8b949e; font-weight: 600; font-size: 13px; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background: #21262d; }
+        
+        .status-green { 
+            color: #3fb950; font-size: 13px; font-weight: 500;
+        }
+        
+        .btn-action { 
+            padding: 5px 10px; border: 1px solid #30363d; border-radius: 6px; 
+            cursor: pointer; font-weight: 500; font-size: 12px; background: transparent; color: #c9d1d9;
+            transition: 0.2s;
+        }
+        .btn-edit:hover { border-color: #8b949e; }
+        .btn-delete { color: #f85149; border-color: rgba(248,81,73,0.4); }
+        .btn-delete:hover { background: #da3633; color: #fff; border-color: #da3633;}
 
-        /* Modal Thêm/Sửa */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 999;}
+        /* Modal */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(1,4,9,0.8); justify-content: center; align-items: center; z-index: 999;}
         .modal-overlay.active { display: flex; }
-        .modal-content { background: #151b2b; padding: 25px; border-radius: 15px; width: 90%; max-width: 400px; border: 1px solid #232d42;}
-        .modal-content h3 { margin-bottom: 15px; color: #00e5ff; }
-        .modal-content input, .modal-content select { width: 100%; padding: 10px; margin-bottom: 10px; background: #0b0f19; border: 1px solid #232d42; color: #fff; border-radius: 5px; }
-        .modal-btns { display: flex; gap: 10px; margin-top: 15px; }
-        .modal-btns button { flex: 1; padding: 10px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;}
-        .btn-save { background: #00e5ff; color: #000; }
-        .btn-cancel { background: #333; color: #fff; }
+        .modal-content { 
+            background: #161b22; padding: 24px; border-radius: 6px; 
+            width: 90%; max-width: 450px; border: 1px solid #30363d;
+        }
+        .modal-content h3 { margin-bottom: 20px; color: #f0f6fc; font-size: 18px; }
+        .modal-content label { font-size: 13px; color: #c9d1d9; margin-bottom: 6px; display: block; font-weight: 500;}
+        .modal-content input, .modal-content select { 
+            width: 100%; padding: 8px 12px; margin-bottom: 15px; 
+            background: #0d1117; border: 1px solid #30363d; 
+            color: #c9d1d9; border-radius: 6px; outline: none; font-size: 14px;
+        }
+        .modal-content input:focus, .modal-content select:focus { border-color: #58a6ff; box-shadow: 0 0 0 3px rgba(88,166,255,0.3); }
+        
+        .modal-btns { display: flex; gap: 12px; margin-top: 10px; justify-content: flex-end;}
+        .modal-btns button { padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 14px;}
+        .btn-save { background: #238636; color: #fff; border: 1px solid rgba(240,246,252,0.1); }
+        .btn-save:hover { background: #2ea043; }
+        .btn-cancel { background: transparent; color: #c9d1d9; border: 1px solid #30363d; }
+        .btn-cancel:hover { background: #30363d; }
     </style>
 </head>
 <body>
 
     <!-- Form Đăng Nhập -->
     <div id="login-box">
-        <h2><i class="fa-solid fa-lock"></i> ADMIN LOGIN</h2>
-        <input type="password" id="admin-pass" placeholder="Nhập mật khẩu Admin...">
-        <button onclick="login()">ĐĂNG NHẬP</button>
+        <h2><i class="fa-solid fa-lock"></i> Đăng nhập Admin</h2>
+        <input type="password" id="admin-pass" placeholder="Nhập mật khẩu...">
+        <button onclick="login()">Đăng nhập</button>
     </div>
 
     <!-- Giao diện Admin -->
     <div id="admin-panel">
         <div class="header">
-            <h1 style="color: #00e5ff;">Quản Lý Web SQ MOD</h1>
-            <button onclick="logout()" style="padding: 10px; background: #ff0033; color: #fff; border: none; border-radius: 5px; cursor: pointer; font-weight:bold;">Đăng xuất</button>
-        </div>
-
-        <div class="tabs">
-            <div class="tab active" onclick="filterTable('all')">Tất cả Bản Mod</div>
-            <div class="tab" onclick="filterTable('page-proxy')">Menu</div>
-            <div class="tab" onclick="filterTable('page-dinhvi')">Định Vị</div>
-            <div class="tab" onclick="filterTable('page-skin')">Mod Skin</div>
+            <h1><i class="fa-solid fa-gear"></i> Hệ Thống Quản Trị</h1>
+            <button class="btn-logout" onclick="logout()">Đăng xuất</button>
         </div>
 
         <div class="stats">
-            <div class="stat-card"><p>Tổng Số Bản Mod</p><h3 id="stat-total">0</h3></div>
-            <div class="stat-card"><p>Đang Hoạt Động</p><h3 style="color: #00ff88;" id="stat-active">0</h3></div>
-            <div class="stat-card"><p>Tổng Lượt Tải (Demo)</p><h3 style="color: #ffd700;">999+</h3></div>
-            <div class="stat-card"><p>Người Online (Demo)</p><h3 style="color: #00e5ff;">12</h3></div>
+            <div class="stat-card">
+                <p>Tổng số bản Mod</p>
+                <h3 id="stat-total">0</h3>
+            </div>
+            <div class="stat-card active">
+                <p>Đang hoạt động</p>
+                <h3 id="stat-active">0</h3>
+            </div>
+            <div class="stat-card download">
+                <p>Tổng lượt tải (Demo)</p>
+                <h3>999+</h3>
+            </div>
+            <div class="stat-card">
+                <p>Người online (Demo)</p>
+                <h3>12</h3>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" onclick="filterTable('all', this)">Tất cả</div>
+            <div class="tab" onclick="filterTable('page-proxy', this)">Menu</div>
+            <div class="tab" onclick="filterTable('page-dinhvi', this)">Định Vị</div>
+            <div class="tab" onclick="filterTable('page-skin', this)">Mod Skin</div>
         </div>
 
         <div class="actions">
-            <input type="text" id="search-input" placeholder="Tìm theo tên bản mod..." onkeyup="searchTable()">
-            <button class="btn-add" onclick="openModal('add')">+ Thêm Bản Mod Mới</button>
+            <input type="text" id="search-input" placeholder="Tìm kiếm bản mod..." onkeyup="searchTable()">
+            <button class="btn-add" onclick="openModal('add')"><i class="fa-solid fa-plus"></i> Thêm Mod Mới</button>
         </div>
 
         <div class="table-responsive">
@@ -116,16 +211,22 @@
         <div class="modal-content">
             <h3 id="modal-title">Thêm Mod Mới</h3>
             <input type="hidden" id="mod-id">
-            <input type="text" id="mod-name" placeholder="Tên Mod (VD: BÁO HỒNG)">
             
+            <label>Tên Mod</label>
+            <input type="text" id="mod-name" placeholder="VD: BÁO HỒNG">
+            
+            <label>Danh mục</label>
             <select id="mod-category">
                 <option value="page-proxy">MENU</option>
                 <option value="page-dinhvi">ĐỊNH VỊ</option>
                 <option value="page-skin">MOD SKIN</option>
             </select>
 
-            <input type="text" id="mod-img" placeholder="Link Ảnh (https://...)">
-            <input type="text" id="mod-link" placeholder="Link Tải (https://...)">
+            <label>Link Ảnh</label>
+            <input type="text" id="mod-img" placeholder="https://...">
+            
+            <label>Link Tải</label>
+            <input type="text" id="mod-link" placeholder="https://...">
             
             <div class="modal-btns">
                 <button class="btn-cancel" onclick="closeModal()">Hủy</button>
@@ -138,7 +239,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // Cấu hình Firebase của Kovak
         const firebaseConfig = {
             apiKey: "AIzaSyBA6LXphLTRJw-cKECEPNAzODAkHB3oKHI",
             authDomain: "sq-mod-key.firebaseapp.com",
@@ -173,7 +273,6 @@
             location.reload();
         }
 
-        // Hàm tải dữ liệu
         async function loadData() {
             const { collection, getDocs } = window.fbTools;
             try {
@@ -190,8 +289,10 @@
             }
         }
 
-        // Hiển thị bảng
-        window.filterTable = function(category) {
+        window.filterTable = function(category, tabElement) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            if(tabElement) tabElement.classList.add('active');
+            
             if(category === 'all') {
                 renderTable(allMods);
             } else {
@@ -214,10 +315,10 @@
                 let catName = mod.category === 'page-proxy' ? 'MENU' : (mod.category === 'page-dinhvi' ? 'ĐỊNH VỊ' : 'MOD SKIN');
                 let tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td><img src="${mod.img}" width="50" style="border-radius: 5px;" onerror="this.src='https://i.ibb.co/0VKpd4C4/file-00000000031081fab71b349b2f53c583.png'"></td>
-                    <td><b>${mod.name}</b></td>
-                    <td>${catName}</td>
-                    <td>Mediafire</td>
+                    <td><img src="${mod.img}" width="40" height="40" style="border-radius: 6px; object-fit: cover; border: 1px solid #30363d;" onerror="this.src='https://i.ibb.co/0VKpd4C4/file-00000000031081fab71b349b2f53c583.png'"></td>
+                    <td><b style="color:#f0f6fc;">${mod.name}</b></td>
+                    <td><span style="color:#8b949e;">${catName}</span></td>
+                    <td><a href="${mod.link}" target="_blank" style="color:#58a6ff; text-decoration:none;">Tải xuống</a></td>
                     <td><span class="status-green">Hoạt động</span></td>
                     <td>
                         <button class="btn-action btn-edit" onclick="editMod('${mod.id}')">Sửa</button>
@@ -228,7 +329,6 @@
             });
         }
 
-        // Mở/Đóng Modal
         window.openModal = function(type) {
             document.getElementById('modal-form').classList.add('active');
             if(type === 'add') {
@@ -244,7 +344,6 @@
             document.getElementById('modal-form').classList.remove('active');
         }
 
-        // Sửa Mod
         window.editMod = function(id) {
             const mod = allMods.find(m => m.id === id);
             if(!mod) return;
@@ -258,7 +357,6 @@
             document.getElementById('mod-link').value = mod.link;
         }
 
-        // Lưu Mod (Thêm hoặc Cập nhật)
         window.saveMod = async function() {
             const { collection, addDoc, doc, updateDoc } = window.fbTools;
             const id = document.getElementById('mod-id').value;
@@ -267,16 +365,14 @@
             const img = document.getElementById('mod-img').value;
             const link = document.getElementById('mod-link').value;
 
-            if(!name || !img || !link) { alert("Nhập đủ thông tin!"); return; }
+            if(!name || !img || !link) { alert("Vui lòng nhập đủ thông tin!"); return; }
 
             try {
                 if(id) {
-                    // Cập nhật
                     const docRef = doc(window.db, "mods", id);
                     await updateDoc(docRef, { name, category, img, link });
                     alert("Đã cập nhật!");
                 } else {
-                    // Thêm mới
                     await addDoc(collection(window.db, "mods"), { name, category, img, link });
                     alert("Đã thêm mới!");
                 }
@@ -287,7 +383,6 @@
             }
         }
 
-        // Xóa Mod
         window.deleteMod = async function(id) {
             if(confirm("Bạn có chắc chắn muốn xóa Mod này không?")) {
                 const { doc, deleteDoc } = window.fbTools;
@@ -301,4 +396,4 @@
         }
     </script>
 </body>
-    </html>
+</html>
