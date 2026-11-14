@@ -7,6 +7,29 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- KẾT NỐI FIREBASE -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+      import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+      // Cấu hình Firebase của Kovak
+      const firebaseConfig = {
+        apiKey: "AIzaSyBA6LXphLTRJw-cKECEPNAzODAkHB3oKHI",
+        authDomain: "sq-mod-key.firebaseapp.com",
+        projectId: "sq-mod-key",
+        storageBucket: "sq-mod-key.firebasestorage.app",
+        messagingSenderId: "1027007715479",
+        appId: "1:1027007715479:web:e341f8f70978f2058e71d2",
+        measurementId: "G-2J4WVTPM8C"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      
+      window.db = db;
+      window.fbTools = { collection, getDocs };
+    </script>
+
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -129,7 +152,9 @@
         .item-card:hover { background: rgba(255, 255, 255, 0.1); border-color: rgba(0, 229, 255, 0.5); }
 
         .item-img { width: 90px; height: 90px; border-radius: 14px; object-fit: cover; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; }
+        
         .item-info { margin-left: 15px; flex: 1; }
+        
         .item-title { font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: 800; color: #00fa9a; line-height: 1.2; margin-bottom: 5px; text-transform: uppercase; }
         .item-desc { font-size: 12px; color: #ccc; }
 
@@ -251,7 +276,7 @@
             </a>
         </div>
 
-        <!-- TRANG CON: MOD SKIN (Hướng dẫn chép File) -->
+        <!-- TRANG CON: MOD SKIN (Tự động tải từ Firebase) -->
         <div id="page-skin" class="page">
             <div class="page-header">
                 <div class="back-btn ripple-btn" onclick="showPage('page-home')"><i class="fa-solid fa-arrow-left"></i> Quay lại</div>
@@ -259,50 +284,11 @@
             </div>
             <div class="page-title">DANH MỤC MOD SKIN</div>
 
-            <a href="https://link4m.net/z5FqA7PV" class="item-card ripple-btn">
-                <span class="badge-ffth">FFTH</span>
-                <img src="https://i.ibb.co/cXyvr9H0/Screenshot-2026-11-10-13-53-38-932-com-dts-freefireth.jpg" class="item-img" alt="Báo Hồng">
-                <div class="item-info">
-                    <div class="item-title">BÁO HỒNG</div>
-                    <div class="item-desc">Vượt 1</div>
-                </div>
-            </a>
+            <!-- KHU VỰC TỰ ĐỘNG LẤY DỮ LIỆU TỪ FIREBASE -->
+            <div id="firebase-skin-list">
+                <p style="text-align:center; color:#aaa;">Đang tải dữ liệu...</p>
+            </div>
 
-            <a href="https://link4m.net/0gFfm0vf" class="item-card ripple-btn">
-                <span class="badge-ffth">FFTH</span>
-                <img src="https://i.ibb.co/GvQNBpW0/Screenshot-2026-11-10-13-52-15-081-com-dts-freefireth.jpg" class="item-img" alt="Roblox">
-                <div class="item-info">
-                    <div class="item-title">ROBLOX</div>
-                    <div class="item-desc">Vượt 1</div>
-                </div>
-            </a>
-
-            <a href="https://link4m.net/hkxIg" class="item-card ripple-btn">
-                <span class="badge-ffth">FFTH</span>
-                <img src="https://i.ibb.co/5h0V3JXM/Screenshot-2026-11-10-13-20-33-984-com-dts-freefireth.jpg" class="item-img" alt="Người Nhện Đen">
-                <div class="item-info">
-                    <div class="item-title">NGƯỜI NHỆN ĐEN</div>
-                    <div class="item-desc">Vượt 1</div>
-                </div>
-            </a>
-
-            <a href="https://link4m.org/Vhmr2SUN" class="item-card ripple-btn">
-                <span class="badge-ffth">FFTH</span>
-                <img src="https://i.ibb.co/67LB926n/Screenshot-2026-11-10-13-18-35-849-com-dts-freefireth.jpg" class="item-img" alt="Luffy Gear5">
-                <div class="item-info">
-                    <div class="item-title">LUFFY GEAR5</div>
-                    <div class="item-desc">Vượt 1</div>
-                </div>
-            </a>
-
-            <a href="https://link4m.org/cQ6MlFaJ" class="item-card ripple-btn">
-                <span class="badge-ffth">FFTH</span>
-                <img src="https://i.ibb.co/JwnHbcNQ/Screenshot-2026-11-10-13-16-04-569-com-dts-freefireth.jpg" class="item-img" alt="Cao Bồi">
-                <div class="item-info">
-                    <div class="item-title">CAO BỒI</div>
-                    <div class="item-desc">Vượt 1</div>
-                </div>
-            </a>
         </div>
 
     </div>
@@ -392,6 +378,33 @@
                 }, 600);
             });
         });
-    </script>
-</body>
-  </html>
+
+        // =====================================================
+        // TỰ ĐỘNG TẢI MOD SKIN TỪ FIREBASE
+        // =====================================================
+        async function loadModsFromFirebase() {
+            if (!window.db) return; // Đợi Firebase kết nối
+
+            const { collection, getDocs } = window.fbTools;
+            
+            try {
+                // Lấy dữ liệu từ bảng "mods"
+                const querySnapshot = await getDocs(collection(window.db, "mods"));
+                const listContainer = document.getElementById('firebase-skin-list');
+                
+                listContainer.innerHTML = ''; // Xóa dữ liệu cũ
+
+                if (querySnapshot.empty) {
+                    listContainer.innerHTML = '<p style="text-align:center; color:#aaa;">Đang cập nhật...</p>';
+                    return;
+                }
+
+                // Tạo thẻ HTML cho từng file
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const itemHTML = `
+                        <a href="${data.link}" class="item-card ripple-btn">
+                            <span class="badge-ffth">FFTH</span>
+                            <img src="${data.img}" class="item-img" alt="${data.name}">
+                            <div class="item-info">
+                
