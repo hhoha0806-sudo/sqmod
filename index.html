@@ -103,8 +103,11 @@
 
         .subtitle { font-size: 13px; color: #00e5ff; margin-bottom: 30px; letter-spacing: 1px; text-transform: uppercase; text-shadow: 0 0 5px rgba(0,229,255,0.5); }
 
+        /* Ẩn các trang con mặc định */
         .page { display: none; animation: fadeIn 0.3s; }
+        /* Trang chủ hiển thị đầu tiên */
         #page-home { display: block; } 
+        
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* Hiệu ứng gợn sóng khi bấm */
@@ -330,7 +333,7 @@
     </div>
 
     <script>
-        // Hàm chuyển trang
+        // Hàm chuyển trang (Đã sửa lỗi)
         function showPage(pageId) {
             let pages = document.querySelectorAll('.page');
             pages.forEach(page => { page.style.display = 'none'; });
@@ -405,6 +408,4 @@
                     const itemHTML = `
                         <a href="${data.link}" class="item-card ripple-btn">
                             <span class="badge-ffth">FFTH</span>
-                            <img src="${data.img}" class="item-img" alt="${data.name}">
-                            <div class="item-info">
-                
+                            <img src="${data.img}" c
