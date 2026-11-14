@@ -10,7 +10,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         
         body { 
-            background-color: #0d1117; /* Màu nền tối chuẩn GitHub */
+            background-color: #0d1117; 
             color: #c9d1d9; 
             padding: 30px 20px;
             min-height: 100vh;
@@ -19,10 +19,8 @@
         /* Login Box */
         #login-box {
             max-width: 380px; margin: 100px auto; 
-            background: #161b22; 
-            padding: 35px 25px; 
-            border-radius: 8px; 
-            border: 1px solid #30363d;
+            background: #161b22; padding: 35px 25px; 
+            border-radius: 8px; border: 1px solid #30363d;
         }
         #login-box h2 { margin-bottom: 20px; color: #f0f6fc; font-size: 20px; font-weight: 600; text-align: center;}
         #login-box input { 
@@ -55,7 +53,7 @@
         }
         .btn-logout:hover { background: #30363d; }
 
-        /* Thống kê */
+        /* Thống kê (3 ô) */
         .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
         .stat-card { 
             background: #161b22; border: 1px solid #30363d; 
@@ -65,7 +63,6 @@
         .stat-card h3 { font-size: 24px; font-weight: 600; color: #f0f6fc;}
         
         .stat-card.active h3 { color: #3fb950; }
-        .stat-card.download h3 { color: #d29922; }
 
         /* Thanh công cụ */
         .actions { display: flex; justify-content: space-between; margin-bottom: 15px; gap: 15px; flex-wrap: wrap; }
@@ -103,9 +100,7 @@
         tr:last-child td { border-bottom: none; }
         tr:hover { background: #21262d; }
         
-        .status-green { 
-            color: #3fb950; font-size: 13px; font-weight: 500;
-        }
+        .status-green { color: #3fb950; font-size: 13px; font-weight: 500;}
         
         .btn-action { 
             padding: 5px 10px; border: 1px solid #30363d; border-radius: 6px; 
@@ -165,13 +160,12 @@
                 <p>Đang hoạt động</p>
                 <h3 id="stat-active">0</h3>
             </div>
-            <div class="stat-card download">
-                <p>Tổng lượt tải (Demo)</p>
-                <h3>999+</h3>
-            </div>
             <div class="stat-card">
-                <p>Người online (Demo)</p>
-                <h3>12</h3>
+                <p>Người online</p>
+                <!-- Mã đếm người online thật của Kovak -->
+                <div style="margin-top: 5px; height: 25px; display: flex; align-items: center;">
+                    <script id="_wau5uu">var _wau = _wau || []; _wau.push(["dynamic", "iyr9s4stmh", "5uu", "c4302bffffff", "small"]);</script><script async src="//waust.at/d.js"></script>
+                </div>
             </div>
         </div>
 
@@ -255,7 +249,8 @@
         window.db = db;
         window.fbTools = { collection, addDoc, getDocs, deleteDoc, doc, updateDoc };
 
-        const ADMIN_PASS = "sqmod123"; 
+        // MẬT KHẨU MỚI
+        const ADMIN_PASS = "SỸ QUYỀN K11"; 
         let allMods = [];
 
         window.login = function() {
