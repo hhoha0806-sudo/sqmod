@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - SQ MOD</title>
+    <style>
+        body { font-family: Arial; background: #0b0f19; color: white; padding: 20px; }
+        .box { max-width: 400px; margin: 50px auto; background: #151b2b; padding: 30px; border-radius: 10px; text-align: center; border: 1px solid #232d42;}
+        input, button { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: none; box-sizing: border-box;}
+        input { background: #232d42; color: white; }
+        button { background: #00e5ff; color: black; font-weight: bold; cursor: pointer; }
+        #msg { margin-top: 10px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="box" id="loginBox">
+        <h2 style="color: #00e5ff;">ADMIN LOGIN</h2>
+        <input type="password" id="pass" placeholder="Nhập mật khẩu...">
+        <button onclick="checkLogin()">ĐĂNG NHẬP</button>
+    </div>
+
+    <div class="box" id="adminPanel" style="display:none; max-width: 600px;">
+        <h2 style="color: #00e5ff;">THÊM MOD MỚI</h2>
+        <input type="text" id="mName" placeholder="Tên Mod (VD: BÁO HỒNG)">
+        <input type="text" id="mImg" placeholder="Link Ảnh (https://...)">
+        <input type="text" id="mLink" placeholder="Link Tải (https://...)">
+        <button onclick="addMod()">LƯU VÀO WEB</button>
+        <div id="msg"></div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // Cấu hình Firebase của Kovak
+        const firebaseConfig = {
+            apiKey: "AIzaSyBA6LXphLTRJw-cKECEPNAzODAkHB3oKHI",
+            authDomain: "sq-mod-key.firebaseapp.com",
+            projectId: "sq-mod-key",
+            storageBucket: "sq-mod-key.firebasestorage.app",
+            messagingSenderId: "1027007715479",
+            appId: "1:1027007715479:web:e341f8f70978f2058e71d2",
+            measurementId: "G-2J4WVTPM8C"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Mật khẩu Admin của Kovak (có thể đổi tùy ý)
+        const ADMIN_PASS = "sqmod123"; 
+
+        window.checkLogin = function() {
+            let pass = document.getElementById('pass').value;
+            if (pass === ADMIN_PASS) {
+                document.getElementById('loginBox').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+            } else {
+                alert("Sai mật khẩu!");
+            }
+        }
+
+        window.addMod = async function() {
+            let name = document.getElementById('mName').value;
+            let img = document.getElementById('mImg').value;
+            let link = document.getElementById('mLink').value;
+            let msg = document.getElementById('msg');
+
+            if (!name || !img || !link) { msg.innerText = "Nhập đủ thông tin!"; msg.style.color = "red"; return; }
+
+            msg.innerText = "Đang lưu...";
+            msg.style.color = "yellow";
+
+            try {
+                await addDoc(collection(db, "mods"), { name, img, link });
+                msg.innerText = "✅ Đã thêm thành công!";
+                msg.style.color = "#00ff88";
+                document.getElementById('mName').value = '';
+                document.getElementById('mImg').value = '';
+                document.getElementById('mLink').value = '';
+            } catch (e) {
+                msg.innerText = "❌ Lỗi: " + e.message;
+                msg.style.color = "red";
+            }
+        }
+    </script>
+</body>
+</html>
