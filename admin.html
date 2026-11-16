@@ -95,7 +95,7 @@
     <div id="admin-panel">
         <div class="header">
             <h1><i class="fa-solid fa-gear"></i> Hệ Thống Quản Trị</h1>
-            <button class="btn-logout" onclick="logout()">Đăng xuất</button>
+            <button class="btn-logout" id="btn-logout">Đăng xuất</button>
         </div>
 
         <div class="stats">
@@ -108,8 +108,10 @@
                 <h3 id="stat-active" style="color: #3fb950;">0</h3>
             </div>
             <div class="stat-card">
-                <p>Truy cập hôm nay</p>
-                <h3 id="stat-visits-today" style="color: #d29922;">0</h3>
+                <p>Người online</p>
+                <div style="margin-top: 5px; height: 28px;">
+                    <script id="_wau5uu">var _wau = _wau || []; _wau.push(["dynamic", "iyr9s4stmh", "5uu", "c4302bffffff", "small"]);</script><script async src="//waust.at/d.js"></script>
+                </div>
             </div>
             <div class="stat-card">
                 <p>Tổng lượt xem</p>
@@ -209,13 +211,13 @@
         </div>
     </div>
 
-    <!-- KHỐI 1: XỬ LÝ GIAO DIỆN CƠ BẢN (KHÔNG PHỤ THUỘC FIREBASE) -->
+    <!-- KHỐI 1: XỬ LÝ GIAO DIỆN (CHẠY ĐỘC LẬP, KHÔNG BAO GIỜ ĐƠ) -->
     <script>
-        // Sự kiện nút Đăng nhập
+        const ADMIN_PASS = "SỸ QUYỀN K11"; 
+
         document.getElementById('btn-login').addEventListener('click', function() {
             let pass = document.getElementById('admin-pass').value;
             let msg = document.getElementById('login-msg');
-            const ADMIN_PASS = "SỸ QUYỀN K11"; 
             
             if (pass === ADMIN_PASS) {
                 msg.style.display = 'block';
@@ -225,9 +227,9 @@
                 setTimeout(() => {
                     document.getElementById('login-box').style.display = 'none';
                     document.getElementById('admin-panel').style.display = 'block';
-                    // Gọi hàm khởi tạo từ khối script Firebase bên dưới
+                    // Gọi hàm tải dữ liệu từ Firebase
                     if(window.initAdminData) window.initAdminData();
-                }, 800);
+                }, 600);
             } else {
                 msg.style.display = 'block';
                 msg.className = 'msg-error';
@@ -235,10 +237,8 @@
             }
         });
 
-        // Sự kiện nút Đăng xuất
-        document.querySelector('.btn-logout').addEventListener('click', function() { location.reload(); });
+        document.getElementById('btn-logout').addEventListener('click', function() { location.reload(); });
 
-        // Sự kiện nút Mở Modal Thêm
         document.getElementById('btn-open-add-modal').addEventListener('click', function() {
             document.getElementById('modal-form').classList.add('active');
             document.getElementById('modal-title').innerText = "Thêm Mod Mới";
@@ -253,12 +253,10 @@
             document.getElementById('group-sub').style.display = 'none';
         });
 
-        // Sự kiện nút Hủy Modal
         document.getElementById('btn-close-modal').addEventListener('click', function() {
             document.getElementById('modal-form').classList.remove('active');
         });
 
-        // Hàm ẩn/hiện ô nhập link
         function toggleLinkInput(type) {
             if(type === 'main') {
                 document.getElementById('group-main').style.display = document.getElementById('check-main').checked ? 'block' : 'none';
@@ -267,18 +265,16 @@
             }
         }
 
-        // Sự kiện nút Lưu Cấu Hình (Sẽ được gắn hàm xử lý Firebase sau)
         document.getElementById('btn-save-cfg').addEventListener('click', function() {
             if(window.saveSettingsData) window.saveSettingsData();
         });
 
-        // Sự kiện nút Lưu Mod (Sẽ được gắn hàm xử lý Firebase sau)
         document.getElementById('btn-save-modal').addEventListener('click', function() {
             if(window.saveModData) window.saveModData();
         });
     </script>
 
-    <!-- KHỐI 2: XỬ LÝ DỮ LIỆU (FIREBASE) -->
+    <!-- KHỐI 2: XỬ LÝ FIREBASE (TẢI DỮ LIỆU) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -297,14 +293,14 @@
         const db = getFirestore(app);
         let allMods = [];
 
-        // --- KHỞI TẠO DỮ LIỆU KHI ĐĂNG NHẬP ---
+        // --- KHỞI TẠO DỮ LIỆU ---
         window.initAdminData = async function() {
             loadSettings();
             loadStats();
             loadData();
         }
 
-        // --- CẤU HÌNH ---
+        // --- CẤU HÌNH MẠNG XÃ HỘI ---
         async function loadSettings() {
             try {
                 const docSnap = await getDoc(doc(db, "settings", "socials"));
@@ -328,7 +324,7 @@
             } catch (e) { alert("Lỗi: " + e.message); }
         }
 
-        // --- THỐNG KÊ ---
+        // --- THỐNG KÊ LƯỢT XEM ---
         async function loadStats() {
             try {
                 const statsRef = doc(db, "settings", "visits");
@@ -336,7 +332,6 @@
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     document.getElementById('stat-visits-total').innerText = data.total || 0;
-                    document.getElementById('stat-visits-today').innerText = Math.floor(Math.random() * 50) + 10; 
                 }
             } catch(e) { console.log(e); }
         }
@@ -382,4 +377,8 @@
                 let tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td><img src="${mod.img}" width="40" height="40" style="border-radius: 6px; object-fit: cover; border: 1px solid #30363d;" onerror="this.src='https://i.ibb.co/0VKpd4C4/file-00000000031081fab71b349b2f53c583.png'"></td>
-    
+                    <td><b style="color:#f0f6fc;">${mod.name}</b></td>
+                    <td><span style="color:#8b949e;">${catName}</span></td>
+                    <td><span style="color:#d29922;">${linkType}</span></td>
+                    <td>
+  
