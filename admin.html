@@ -118,7 +118,6 @@
             </div>
         </div>
 
-        <!-- CẤU HÌNH LINK MẠNG XÃ HỘI -->
         <div class="config-box">
             <h3><i class="fa-solid fa-link"></i> Cấu hình Link Mạng Xã Hội</h3>
             <div class="config-grid">
@@ -187,7 +186,6 @@
             <label>Link Ảnh</label>
             <input type="text" id="mod-img" placeholder="https://...">
             
-            <!-- PHẦN CHỌN LINK CHÍNH / PHỤ -->
             <div class="link-section">
                 <div>
                     <input type="checkbox" id="check-main" onchange="toggleLinkInput('main')">
@@ -212,6 +210,37 @@
         </div>
     </div>
 
+    <script>
+        // MẬT KHẨU ADMIN
+        const ADMIN_PASS = "SỸ QUYỀN K11"; 
+        
+        // --- HÀM ĐĂNG NHẬP (ĐÃ SỬA LỖI VÀ THÊM THÔNG BÁO) ---
+        function login() {
+            let pass = document.getElementById('admin-pass').value;
+            let msg = document.getElementById('login-msg');
+            
+            if (pass === ADMIN_PASS) {
+                msg.style.display = 'block';
+                msg.className = 'msg-success';
+                msg.innerText = "✅ Mật khẩu đúng! Đang đăng nhập...";
+                
+                setTimeout(() => {
+                    document.getElementById('login-box').style.display = 'none';
+                    document.getElementById('admin-panel').style.display = 'block';
+                    // Gọi hàm tải dữ liệu từ file script module bên dưới
+                    if(window.initAdminData) window.initAdminData();
+                }, 800);
+            } else {
+                msg.style.display = 'block';
+                msg.className = 'msg-error';
+                msg.innerText = "❌ Sai mật khẩu! Vui lòng thử lại.";
+            }
+        }
+
+        function logout() { location.reload(); }
+    </script>
+
+    <!-- FIREBASE & XỬ LÝ DỮ LIỆU (TÁCH BIỆT ĐỂ TRÁNH LỖI ĐĂNG NHẬP) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, getDoc, setDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -228,42 +257,16 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        
-        window.db = db;
-        window.fbTools = { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, getDoc, setDoc, increment };
-
-        const ADMIN_PASS = "SỸ QUYỀN K11"; 
         let allMods = [];
 
-        window.login = function() {
-            let pass = document.getElementById('admin-pass').value;
-            let msg = document.getElementById('login-msg');
-            
-            if (pass === ADMIN_PASS) {
-                msg.style.display = 'block';
-                msg.className = 'msg-success';
-                msg.innerText = "✅ Mật khẩu đúng! Đang đăng nhập...";
-                
-                // Đợi 0.5s để hiện thông báo rồi mới chuyển trang
-                setTimeout(() => {
-                    document.getElementById('login-box').style.display = 'none';
-                    document.getElementById('admin-panel').style.display = 'block';
-                    loadData();
-                    loadSettings();
-                    loadStats();
-                }, 500);
-            } else {
-                msg.style.display = 'block';
-                msg.className = 'msg-error';
-                msg.innerText = "❌ Sai mật khẩu! Vui lòng thử lại.";
-            }
+        // Hàm khởi tạo dữ liệu khi đăng nhập thành công
+        window.initAdminData = async function() {
+            loadSettings();
+            loadStats();
+            loadData();
         }
 
-        window.logout = function() { location.reload(); }
-
-        // --- CHỨC NĂNG 1: CẤU HÌNH LINK MẠNG XÃ HỘI ---
         async function loadSettings() {
-            const { doc, getDoc } = window.fbTools;
             try {
                 const docSnap = await getDoc(doc(db, "settings", "socials"));
                 if (docSnap.exists()) {
@@ -276,7 +279,6 @@
         }
 
         window.saveSettings = async function() {
-            const { doc, setDoc } = window.fbTools;
             const telegram = document.getElementById('cfg-telegram').value;
             const youtube = document.getElementById('cfg-youtube').value;
             const tiktok = document.getElementById('cfg-tiktok').value;
@@ -284,30 +286,22 @@
             try {
                 await setDoc(doc(db, "settings", "socials"), { telegram, youtube, tiktok });
                 alert("Đã lưu cấu hình link mạng xã hội!");
-            } catch (e) {
-                alert("Lỗi: " + e.message);
-            }
+            } catch (e) { alert("Lỗi: " + e.message); }
         }
 
-        // --- CHỨC NĂNG 2: THỐNG KÊ LƯỢT XEM ---
         async function loadStats() {
-            const { doc, getDoc } = window.fbTools;
             try {
                 const statsRef = doc(db, "settings", "visits");
                 const docSnap = await getDoc(statsRef);
-                
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     document.getElementById('stat-visits-total').innerText = data.total || 0;
-                    // Hiển thị ngẫu nhiên cho hôm nay (để đếm thật cần backend riêng)
                     document.getElementById('stat-visits-today').innerText = Math.floor(Math.random() * 50) + 10; 
                 }
             } catch(e) { console.log(e); }
         }
 
-        // --- TẢI DỮ LIỆU MOD ---
         async function loadData() {
-            const { collection, getDocs } = window.fbTools;
             try {
                 const querySnapshot = await getDocs(collection(db, "mods"));
                 allMods = [];
@@ -379,4 +373,15 @@
                 document.getElementById('check-main').checked = false;
                 document.getElementById('check-sub').checked = false;
                 toggleLinkInput('main');
-                toggleLinkInpu
+                toggleLinkInput('sub');
+            }
+        }
+
+        window.closeModal = function() { document.getElementById('modal-form').classList.remove('active'); }
+
+        window.editMod = function(id) {
+            const mod = allMods.find(m => m.id === id);
+            if(!mod) return;
+            
+            document.getElementById('modal-form').classList.add('active');
+            documen
