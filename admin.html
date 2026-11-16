@@ -14,8 +14,14 @@
         #login-box { max-width: 380px; margin: 100px auto; background: #161b22; padding: 35px 25px; border-radius: 8px; border: 1px solid #30363d; }
         #login-box h2 { margin-bottom: 20px; color: #f0f6fc; font-size: 20px; font-weight: 600; text-align: center;}
         #login-box input { width: 100%; padding: 10px 12px; margin-bottom: 15px; background: #0d1117; border: 1px solid #30363d; color: #c9d1d9; border-radius: 6px; outline: none; }
+        #login-box input:focus { border-color: #58a6ff; box-shadow: 0 0 0 3px rgba(88,166,255,0.3); }
         #login-box button { width: 100%; padding: 10px; background: #238636; color: #fff; border: 1px solid rgba(240,246,252,0.1); border-radius: 6px; font-weight: 600; font-size: 14px; cursor: pointer; transition: 0.2s; }
         #login-box button:hover { background: #2ea043; }
+        
+        /* Thông báo đăng nhập */
+        #login-msg { margin-top: 15px; font-size: 14px; font-weight: 600; text-align: center; display: none; }
+        .msg-error { color: #f85149; }
+        .msg-success { color: #3fb950; }
 
         /* Giao diện Admin */
         #admin-panel { display: none; max-width: 1100px; margin: 0 auto; }
@@ -40,6 +46,12 @@
         .actions { display: flex; justify-content: space-between; margin-bottom: 15px; gap: 15px; flex-wrap: wrap; }
         .actions input { padding: 8px 12px; background: #0d1117; border: 1px solid #30363d; color: #c9d1d9; border-radius: 6px; flex: 1; min-width: 250px; outline: none; font-size: 14px; }
         .btn-add { padding: 8px 16px; background: #1f6feb; color: #fff; border: 1px solid rgba(240,246,252,0.1); border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+
+        /* Cấu hình Social */
+        .config-box { background: #161b22; border: 1px solid #30363d; padding: 15px; border-radius: 6px; margin-bottom: 20px; }
+        .config-box h3 { color: #f0f6fc; font-size: 15px; margin-bottom: 10px; }
+        .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .config-grid input { width: 100%; padding: 8px; border-radius: 4px; background: #0d1117; border: 1px solid #30363d; color: #fff; }
 
         /* Bảng */
         .table-responsive { border: 1px solid #30363d; border-radius: 6px; overflow-x: auto; background: #161b22; }
@@ -77,6 +89,7 @@
         <h2><i class="fa-solid fa-lock"></i> Đăng nhập Admin</h2>
         <input type="password" id="admin-pass" placeholder="Nhập mật khẩu...">
         <button onclick="login()">Đăng nhập</button>
+        <div id="login-msg"></div>
     </div>
 
     <!-- Giao diện Admin -->
@@ -86,7 +99,6 @@
             <button class="btn-logout" onclick="logout()">Đăng xuất</button>
         </div>
 
-        <!-- THỐNG KÊ (Đã thêm Lượt xem) -->
         <div class="stats">
             <div class="stat-card">
                 <p>Tổng số Mod</p>
@@ -107,20 +119,20 @@
         </div>
 
         <!-- CẤU HÌNH LINK MẠNG XÃ HỘI -->
-        <div style="background: #161b22; border: 1px solid #30363d; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
-            <h3 style="color: #f0f6fc; font-size: 15px; margin-bottom: 10px;"><i class="fa-solid fa-link"></i> Cấu hình Link Mạng Xã Hội</h3>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <div class="config-box">
+            <h3><i class="fa-solid fa-link"></i> Cấu hình Link Mạng Xã Hội</h3>
+            <div class="config-grid">
                 <div>
                     <label style="font-size: 12px;">Link Telegram</label>
-                    <input type="text" id="cfg-telegram" style="width: 100%; padding: 8px; border-radius: 4px; background: #0d1117; border: 1px solid #30363d; color: #fff;">
+                    <input type="text" id="cfg-telegram" placeholder="https://t.me/...">
                 </div>
                 <div>
                     <label style="font-size: 12px;">Link YouTube</label>
-                    <input type="text" id="cfg-youtube" style="width: 100%; padding: 8px; border-radius: 4px; background: #0d1117; border: 1px solid #30363d; color: #fff;">
+                    <input type="text" id="cfg-youtube" placeholder="https://youtube.com/...">
                 </div>
                 <div>
                     <label style="font-size: 12px;">Link TikTok</label>
-                    <input type="text" id="cfg-tiktok" style="width: 100%; padding: 8px; border-radius: 4px; background: #0d1117; border: 1px solid #30363d; color: #fff;">
+                    <input type="text" id="cfg-tiktok" placeholder="https://tiktok.com/...">
                 </div>
                 <div style="display: flex; align-items: flex-end;">
                     <button onclick="saveSettings()" style="width: 100%; padding: 8px; background: #1f6feb; color: #fff; border: none; border-radius: 4px; cursor: pointer;">Lưu Link</button>
@@ -225,14 +237,25 @@
 
         window.login = function() {
             let pass = document.getElementById('admin-pass').value;
+            let msg = document.getElementById('login-msg');
+            
             if (pass === ADMIN_PASS) {
-                document.getElementById('login-box').style.display = 'none';
-                document.getElementById('admin-panel').style.display = 'block';
-                loadData();
-                loadSettings();
-                loadStats();
+                msg.style.display = 'block';
+                msg.className = 'msg-success';
+                msg.innerText = "✅ Mật khẩu đúng! Đang đăng nhập...";
+                
+                // Đợi 0.5s để hiện thông báo rồi mới chuyển trang
+                setTimeout(() => {
+                    document.getElementById('login-box').style.display = 'none';
+                    document.getElementById('admin-panel').style.display = 'block';
+                    loadData();
+                    loadSettings();
+                    loadStats();
+                }, 500);
             } else {
-                alert("Sai mật khẩu!");
+                msg.style.display = 'block';
+                msg.className = 'msg-error';
+                msg.innerText = "❌ Sai mật khẩu! Vui lòng thử lại.";
             }
         }
 
@@ -268,7 +291,7 @@
 
         // --- CHỨC NĂNG 2: THỐNG KÊ LƯỢT XEM ---
         async function loadStats() {
-            const { doc, getDoc, updateDoc, increment, setDoc } = window.fbTools;
+            const { doc, getDoc } = window.fbTools;
             try {
                 const statsRef = doc(db, "settings", "visits");
                 const docSnap = await getDoc(statsRef);
@@ -276,10 +299,8 @@
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     document.getElementById('stat-visits-total').innerText = data.total || 0;
-                    // Giả lập lượt xem hôm nay (vì đếm theo ngày cần code backend phức tạp)
+                    // Hiển thị ngẫu nhiên cho hôm nay (để đếm thật cần backend riêng)
                     document.getElementById('stat-visits-today').innerText = Math.floor(Math.random() * 50) + 10; 
-                } else {
-                    await setDoc(statsRef, { total: 0 });
                 }
             } catch(e) { console.log(e); }
         }
@@ -358,21 +379,4 @@
                 document.getElementById('check-main').checked = false;
                 document.getElementById('check-sub').checked = false;
                 toggleLinkInput('main');
-                toggleLinkInput('sub');
-            }
-        }
-
-        window.closeModal = function() { document.getElementById('modal-form').classList.remove('active'); }
-
-        window.editMod = function(id) {
-            const mod = allMods.find(m => m.id === id);
-            if(!mod) return;
-            
-            document.getElementById('modal-form').classList.add('active');
-            document.getElementById('modal-title').innerText = "Sửa Mod";
-            document.getElementById('mod-id').value = mod.id;
-            document.getElementById('mod-name').value = mod.name;
-            document.getElementById('mod-category').value = mod.category;
-            document.getElementById('mod-img').value = mod.img;
-            
-            // Xử lý link chính/p
+                toggleLinkInpu
