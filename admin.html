@@ -34,6 +34,7 @@
         .stat-card { background: #161b22; border: 1px solid #30363d; padding: 20px; border-radius: 6px; }
         .stat-card p { color: #8b949e; font-size: 13px; margin-bottom: 8px; font-weight: 500;}
         .stat-card h3 { font-size: 24px; font-weight: 600; color: #f0f6fc;}
+        .stat-card.active h3 { color: #3fb950; }
 
         /* Tabs */
         .tabs { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; border-bottom: 1px solid #30363d; padding-bottom: 10px;}
@@ -86,7 +87,7 @@
     <div id="login-box">
         <h2><i class="fa-solid fa-lock"></i> Đăng nhập Admin</h2>
         <input type="password" id="admin-pass" placeholder="Nhập mật khẩu...">
-        <button onclick="login()">Đăng nhập</button>
+        <button id="btn-login">Đăng nhập</button>
         <div id="login-msg"></div>
     </div>
 
@@ -132,7 +133,7 @@
                     <input type="text" id="cfg-tiktok" placeholder="https://tiktok.com/...">
                 </div>
                 <div style="display: flex; align-items: flex-end;">
-                    <button onclick="saveSettings()" class="btn-save-cfg">Lưu Link</button>
+                    <button id="btn-save-cfg" class="btn-save-cfg">Lưu Link</button>
                 </div>
             </div>
         </div>
@@ -146,7 +147,7 @@
 
         <div class="actions">
             <input type="text" id="search-input" placeholder="Tìm kiếm..." onkeyup="searchTable()">
-            <button class="btn-add" onclick="openModal()"><i class="fa-solid fa-plus"></i> Thêm Mod</button>
+            <button id="btn-open-add-modal" class="btn-add"><i class="fa-solid fa-plus"></i> Thêm Mod</button>
         </div>
 
         <div class="table-responsive">
@@ -202,15 +203,85 @@
             </div>
             
             <div class="modal-btns">
-                <button class="btn-cancel" onclick="closeModal()">Hủy</button>
-                <button class="btn-save" onclick="saveMod()">Lưu Dữ Liệu</button>
+                <button class="btn-cancel" id="btn-close-modal">Hủy</button>
+                <button class="btn-save" id="btn-save-modal">Lưu Dữ Liệu</button>
             </div>
         </div>
     </div>
 
+    <!-- KHỐI 1: XỬ LÝ GIAO DIỆN CƠ BẢN (KHÔNG PHỤ THUỘC FIREBASE) -->
+    <script>
+        // Sự kiện nút Đăng nhập
+        document.getElementById('btn-login').addEventListener('click', function() {
+            let pass = document.getElementById('admin-pass').value;
+            let msg = document.getElementById('login-msg');
+            const ADMIN_PASS = "SỸ QUYỀN K11"; 
+            
+            if (pass === ADMIN_PASS) {
+                msg.style.display = 'block';
+                msg.className = 'msg-success';
+                msg.innerText = "✅ Mật khẩu đúng! Đang đăng nhập...";
+                
+                setTimeout(() => {
+                    document.getElementById('login-box').style.display = 'none';
+                    document.getElementById('admin-panel').style.display = 'block';
+                    // Gọi hàm khởi tạo từ khối script Firebase bên dưới
+                    if(window.initAdminData) window.initAdminData();
+                }, 800);
+            } else {
+                msg.style.display = 'block';
+                msg.className = 'msg-error';
+                msg.innerText = "❌ Sai mật khẩu! Vui lòng thử lại.";
+            }
+        });
+
+        // Sự kiện nút Đăng xuất
+        document.querySelector('.btn-logout').addEventListener('click', function() { location.reload(); });
+
+        // Sự kiện nút Mở Modal Thêm
+        document.getElementById('btn-open-add-modal').addEventListener('click', function() {
+            document.getElementById('modal-form').classList.add('active');
+            document.getElementById('modal-title').innerText = "Thêm Mod Mới";
+            document.getElementById('mod-id').value = "";
+            document.getElementById('mod-name').value = "";
+            document.getElementById('mod-img').value = "";
+            document.getElementById('mod-link-main').value = "";
+            document.getElementById('mod-link-sub').value = "";
+            document.getElementById('check-main').checked = false;
+            document.getElementById('check-sub').checked = false;
+            document.getElementById('group-main').style.display = 'none';
+            document.getElementById('group-sub').style.display = 'none';
+        });
+
+        // Sự kiện nút Hủy Modal
+        document.getElementById('btn-close-modal').addEventListener('click', function() {
+            document.getElementById('modal-form').classList.remove('active');
+        });
+
+        // Hàm ẩn/hiện ô nhập link
+        function toggleLinkInput(type) {
+            if(type === 'main') {
+                document.getElementById('group-main').style.display = document.getElementById('check-main').checked ? 'block' : 'none';
+            } else {
+                document.getElementById('group-sub').style.display = document.getElementById('check-sub').checked ? 'block' : 'none';
+            }
+        }
+
+        // Sự kiện nút Lưu Cấu Hình (Sẽ được gắn hàm xử lý Firebase sau)
+        document.getElementById('btn-save-cfg').addEventListener('click', function() {
+            if(window.saveSettingsData) window.saveSettingsData();
+        });
+
+        // Sự kiện nút Lưu Mod (Sẽ được gắn hàm xử lý Firebase sau)
+        document.getElementById('btn-save-modal').addEventListener('click', function() {
+            if(window.saveModData) window.saveModData();
+        });
+    </script>
+
+    <!-- KHỐI 2: XỬ LÝ DỮ LIỆU (FIREBASE) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, getDoc, setDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBA6LXphLTRJw-cKECEPNAzODAkHB3oKHI",
@@ -224,37 +295,16 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        
-        const ADMIN_PASS = "SỸ QUYỀN K11"; 
         let allMods = [];
 
-        // --- 1. HÀM ĐĂNG NHẬP ---
-        window.login = function() {
-            let pass = document.getElementById('admin-pass').value;
-            let msg = document.getElementById('login-msg');
-            
-            if (pass === ADMIN_PASS) {
-                msg.style.display = 'block';
-                msg.className = 'msg-success';
-                msg.innerText = "✅ Mật khẩu đúng! Đang đăng nhập...";
-                
-                setTimeout(() => {
-                    document.getElementById('login-box').style.display = 'none';
-                    document.getElementById('admin-panel').style.display = 'block';
-                    loadSettings();
-                    loadStats();
-                    loadData();
-                }, 800);
-            } else {
-                msg.style.display = 'block';
-                msg.className = 'msg-error';
-                msg.innerText = "❌ Sai mật khẩu! Vui lòng thử lại.";
-            }
+        // --- KHỞI TẠO DỮ LIỆU KHI ĐĂNG NHẬP ---
+        window.initAdminData = async function() {
+            loadSettings();
+            loadStats();
+            loadData();
         }
 
-        window.logout = function() { location.reload(); }
-
-        // --- 2. CẤU HÌNH MẠNG XÃ HỘI ---
+        // --- CẤU HÌNH ---
         async function loadSettings() {
             try {
                 const docSnap = await getDoc(doc(db, "settings", "socials"));
@@ -267,7 +317,7 @@
             } catch(e) { console.log(e); }
         }
 
-        window.saveSettings = async function() {
+        window.saveSettingsData = async function() {
             const telegram = document.getElementById('cfg-telegram').value;
             const youtube = document.getElementById('cfg-youtube').value;
             const tiktok = document.getElementById('cfg-tiktok').value;
@@ -278,7 +328,7 @@
             } catch (e) { alert("Lỗi: " + e.message); }
         }
 
-        // --- 3. THỐNG KÊ ---
+        // --- THỐNG KÊ ---
         async function loadStats() {
             try {
                 const statsRef = doc(db, "settings", "visits");
@@ -291,7 +341,7 @@
             } catch(e) { console.log(e); }
         }
 
-        // --- 4. QUẢN LÝ MOD ---
+        // --- QUẢN LÝ MOD ---
         async function loadData() {
             try {
                 const querySnapshot = await getDocs(collection(db, "mods"));
@@ -332,52 +382,4 @@
                 let tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td><img src="${mod.img}" width="40" height="40" style="border-radius: 6px; object-fit: cover; border: 1px solid #30363d;" onerror="this.src='https://i.ibb.co/0VKpd4C4/file-00000000031081fab71b349b2f53c583.png'"></td>
-                    <td><b style="color:#f0f6fc;">${mod.name}</b></td>
-                    <td><span style="color:#8b949e;">${catName}</span></td>
-                    <td><span style="color:#d29922;">${linkType}</span></td>
-                    <td>
-                        <button class="btn-action" onclick="editMod('${mod.id}')">Sửa</button>
-                        <button class="btn-action btn-delete" onclick="deleteMod('${mod.id}')">Xóa</button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        window.toggleLinkInput = function(type) {
-            if(type === 'main') {
-                document.getElementById('group-main').style.display = document.getElementById('check-main').checked ? 'block' : 'none';
-            } else {
-                document.getElementById('group-sub').style.display = document.getElementById('check-sub').checked ? 'block' : 'none';
-            }
-        }
-
-        window.openModal = function() {
-            document.getElementById('modal-form').classList.add('active');
-            document.getElementById('modal-title').innerText = "Thêm Mod Mới";
-            document.getElementById('mod-id').value = "";
-            document.getElementById('mod-name').value = "";
-            document.getElementById('mod-img').value = "";
-            document.getElementById('mod-link-main').value = "";
-            document.getElementById('mod-link-sub').value = "";
-            document.getElementById('check-main').checked = false;
-            document.getElementById('check-sub').checked = false;
-            toggleLinkInput('main');
-            toggleLinkInput('sub');
-        }
-
-        window.closeModal = function() { document.getElementById('modal-form').classList.remove('active'); }
-
-        window.editMod = function(id) {
-            const mod = allMods.find(m => m.id === id);
-            if(!mod) return;
-            
-            document.getElementById('modal-form').classList.add('active');
-            document.getElementById('modal-title').innerText = "Sửa Mod";
-            document.getElementById('mod-id').value = mod.id;
-            document.getElementById('mod-name').value = mod.name;
-            document.getElementById('mod-category').value = mod.category;
-            document.getElementById('mod-img').value = mod.img;
-            
-            document.getElementById('check-main').checked = mod.link_main ? true : false;
-            document.getElementById('mod-link-main').valu
+    
