@@ -14,8 +14,8 @@
         #login-box { max-width: 380px; margin: 100px auto; background: #161b22; padding: 35px 25px; border-radius: 8px; border: 1px solid #30363d; }
         #login-box h2 { margin-bottom: 20px; color: #f0f6fc; font-size: 20px; font-weight: 600; text-align: center;}
         #login-box input { width: 100%; padding: 10px 12px; margin-bottom: 15px; background: #0d1117; border: 1px solid #30363d; color: #c9d1d9; border-radius: 6px; outline: none; }
-        #login-box input:focus { border-color: #58a6ff; box-shadow: 0 0 0 3px rgba(88,166,255,0.3); }
-        #login-box button { width: 100%; padding: 10px; background: #238636; color: #fff; border: 1px solid rgba(240,246,252,0.1); border-radius: 6px; font-weight: 600; font-size: 14px; cursor: pointer; transition: 0.2s; }
+        #login-box input:focus { border-color: #58a6ff; }
+        #login-box button { width: 100%; padding: 10px; background: #238636; color: #fff; border: none; border-radius: 6px; font-weight: 600; font-size: 14px; cursor: pointer; }
         #login-box button:hover { background: #2ea043; }
         
         #login-msg { margin-top: 15px; font-size: 14px; font-weight: 600; text-align: center; display: none; }
@@ -36,22 +36,22 @@
         .stat-card h3 { font-size: 24px; font-weight: 600; color: #f0f6fc;}
         .stat-card.active h3 { color: #3fb950; }
 
-        /* Tabs */
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; border-bottom: 1px solid #30363d; padding-bottom: 10px;}
-        .tab { padding: 6px 12px; background: transparent; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; color: #8b949e; font-weight: 500; }
-        .tab.active { background: #30363d; color: #f0f6fc; }
-
-        /* Thanh công cụ */
-        .actions { display: flex; justify-content: space-between; margin-bottom: 15px; gap: 15px; flex-wrap: wrap; }
-        .actions input { padding: 8px 12px; background: #0d1117; border: 1px solid #30363d; color: #c9d1d9; border-radius: 6px; flex: 1; min-width: 250px; outline: none; font-size: 14px; }
-        .btn-add { padding: 8px 16px; background: #1f6feb; color: #fff; border: 1px solid rgba(240,246,252,0.1); border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 8px; }
-
         /* Cấu hình Social */
         .config-box { background: #161b22; border: 1px solid #30363d; padding: 15px; border-radius: 6px; margin-bottom: 20px; }
         .config-box h3 { color: #f0f6fc; font-size: 15px; margin-bottom: 10px; }
         .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .config-grid input { width: 100%; padding: 8px; border-radius: 4px; background: #0d1117; border: 1px solid #30363d; color: #fff; }
         .btn-save-cfg { width: 100%; padding: 8px; background: #1f6feb; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
+
+        /* Tabs */
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid #30363d; padding-bottom: 10px;}
+        .tab { padding: 6px 12px; background: transparent; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; color: #8b949e; font-weight: 500; }
+        .tab.active { background: #30363d; color: #f0f6fc; }
+
+        /* Thanh công cụ */
+        .actions { display: flex; justify-content: space-between; margin-bottom: 15px; gap: 15px; }
+        .actions input { padding: 8px 12px; background: #0d1117; border: 1px solid #30363d; color: #c9d1d9; border-radius: 6px; flex: 1; outline: none; font-size: 14px; }
+        .btn-add { padding: 8px 16px; background: #1f6feb; color: #fff; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 14px; }
 
         /* Bảng */
         .table-responsive { border: 1px solid #30363d; border-radius: 6px; overflow-x: auto; background: #161b22; }
@@ -71,8 +71,7 @@
         .modal-content input, .modal-content select { width: 100%; padding: 8px 12px; margin-bottom: 15px; background: #0d1117; border: 1px solid #30363d; color: #c9d1d9; border-radius: 6px; outline: none; font-size: 14px; }
         
         .link-section { background: #0d1117; padding: 15px; border-radius: 6px; border: 1px solid #30363d; margin-bottom: 15px;}
-        .link-section input[type="checkbox"] { width: auto; margin-right: 8px; margin-bottom: 10px; transform: scale(1.2);}
-        .link-section label { display: inline-block; cursor: pointer; }
+        .link-section input[type="checkbox"] { width: auto; margin-right: 8px; margin-bottom: 10px; }
         .link-input-group { display: none; margin-top: 10px; }
 
         .modal-btns { display: flex; gap: 12px; margin-top: 10px; justify-content: flex-end;}
@@ -140,15 +139,15 @@
             </div>
         </div>
 
-        <div class="tabs">
-            <div class="tab active" onclick="filterTable('all', this)">Tất cả</div>
-            <div class="tab" onclick="filterTable('page-proxy', this)">Menu</div>
-            <div class="tab" onclick="filterTable('page-dinhvi', this)">Định Vị</div>
-            <div class="tab" onclick="filterTable('page-skin', this)">Mod Skin</div>
+        <div class="tabs" id="tab-container">
+            <button class="tab active" data-cat="all">Tất cả</button>
+            <button class="tab" data-cat="page-proxy">Menu</button>
+            <button class="tab" data-cat="page-dinhvi">Định Vị</button>
+            <button class="tab" data-cat="page-skin">Mod Skin</button>
         </div>
 
         <div class="actions">
-            <input type="text" id="search-input" placeholder="Tìm kiếm..." onkeyup="searchTable()">
+            <input type="text" id="search-input" placeholder="Tìm kiếm...">
             <button id="btn-open-add-modal" class="btn-add"><i class="fa-solid fa-plus"></i> Thêm Mod</button>
         </div>
 
@@ -163,7 +162,9 @@
                         <th>THAO TÁC</th>
                     </tr>
                 </thead>
-                <tbody id="table-body"></tbody>
+                <tbody id="table-body">
+                    <tr><td colspan="5" style="text-align:center;">Đang tải dữ liệu...</td></tr>
+                </tbody>
             </table>
         </div>
     </div>
@@ -189,15 +190,15 @@
             
             <div class="link-section">
                 <div>
-                    <input type="checkbox" id="check-main" onchange="toggleLinkInput('main')">
-                    <label for="check-main">Có Link Chính (Link 1)</label>
+                    <input type="checkbox" id="check-main">
+                    <label for="check-main" style="display:inline; cursor:pointer;">Có Link Chính (Link 1)</label>
                     <div class="link-input-group" id="group-main">
                         <input type="text" id="mod-link-main" placeholder="Nhập Link Chính...">
                     </div>
                 </div>
-                <div>
-                    <input type="checkbox" id="check-sub" onchange="toggleLinkInput('sub')">
-                    <label for="check-sub">Có Link Phụ (Link 2)</label>
+                <div style="margin-top:10px;">
+                    <input type="checkbox" id="check-sub">
+                    <label for="check-sub" style="display:inline; cursor:pointer;">Có Link Phụ (Link 2)</label>
                     <div class="link-input-group" id="group-sub">
                         <input type="text" id="mod-link-sub" placeholder="Nhập Link Phụ...">
                     </div>
@@ -211,6 +212,78 @@
         </div>
     </div>
 
+    <script>
+        // --- XỬ LÝ GIAO DIỆN CƠ BẢN ---
+        const ADMIN_PASS = "SỸ QUYỀN K11"; 
+        
+        document.getElementById('btn-login').onclick = function() {
+            let pass = document.getElementById('admin-pass').value;
+            let msg = document.getElementById('login-msg');
+            
+            if (pass === ADMIN_PASS) {
+                msg.style.display = 'block';
+                msg.className = 'msg-success';
+                msg.innerText = "✅ Mật khẩu đúng! Đang đăng nhập...";
+                setTimeout(() => {
+                    document.getElementById('login-box').style.display = 'none';
+                    document.getElementById('admin-panel').style.display = 'block';
+                    if(window.initAdminData) window.initAdminData();
+                }, 600);
+            } else {
+                msg.style.display = 'block';
+                msg.className = 'msg-error';
+                msg.innerText = "❌ Sai mật khẩu! Vui lòng thử lại.";
+            }
+        };
+
+        document.getElementById('btn-logout').onclick = function() { location.reload(); };
+
+        // Mở/Đóng Modal
+        document.getElementById('btn-open-add-modal').onclick = function() {
+            document.getElementById('modal-form').classList.add('active');
+            document.getElementById('modal-title').innerText = "Thêm Mod Mới";
+            document.getElementById('mod-id').value = "";
+            document.getElementById('mod-name').value = "";
+            document.getElementById('mod-img').value = "";
+            document.getElementById('mod-link-main').value = "";
+            document.getElementById('mod-link-sub').value = "";
+            document.getElementById('check-main').checked = false;
+            document.getElementById('check-sub').checked = false;
+            document.getElementById('group-main').style.display = 'none';
+            document.getElementById('group-sub').style.display = 'none';
+        };
+
+        document.getElementById('btn-close-modal').onclick = function() {
+            document.getElementById('modal-form').classList.remove('active');
+        };
+
+        // Hiển thị ô nhập link khi tích checkbox
+        document.getElementById('check-main').onchange = function() {
+            document.getElementById('group-main').style.display = this.checked ? 'block' : 'none';
+        };
+        document.getElementById('check-sub').onchange = function() {
+            document.getElementById('group-sub').style.display = this.checked ? 'block' : 'none';
+        };
+
+        // Chuyển Tab
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.onclick = function() {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                if(window.filterTable) window.filterTable(this.getAttribute('data-cat'));
+            };
+        });
+
+        // Nút Lưu
+        document.getElementById('btn-save-cfg').onclick = function() {
+            if(window.saveSettingsData) window.saveSettingsData();
+        };
+        document.getElementById('btn-save-modal').onclick = function() {
+            if(window.saveModData) window.saveModData();
+        };
+    </script>
+
+    <!-- --- XỬ LÝ FIREBASE --- -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -229,25 +302,13 @@
         const db = getFirestore(app);
         let allMods = [];
 
-        // 1. Sự kiện đăng nhập
-        document.getElementById('btn-login').addEventListener('click', function() {
-            let pass = document.getElementById('admin-pass').value;
-            let msg = document.getElementById('login-msg');
-            if (pass === "SỸ QUYỀN K11") {
-                msg.style.display = 'block'; msg.className = 'msg-success'; msg.innerText = "✅ Đang đăng nhập...";
-                setTimeout(() => {
-                    document.getElementById('login-box').style.display = 'none';
-                    document.getElementById('admin-panel').style.display = 'block';
-                    loadSettings(); loadStats(); loadData();
-                }, 600);
-            } else {
-                msg.style.display = 'block'; msg.className = 'msg-error'; msg.innerText = "❌ Sai mật khẩu!";
-            }
-        });
+        window.initAdminData = function() {
+            loadSettings();
+            loadStats();
+            loadData();
+        }
 
-        document.getElementById('btn-logout').addEventListener('click', () => location.reload());
-
-        // 2. Cấu hình mạng xã hội
+        // Tải cấu hình mạng xã hội
         async function loadSettings() {
             try {
                 const docSnap = await getDoc(doc(db, "settings", "socials"));
@@ -257,57 +318,64 @@
                     document.getElementById('cfg-youtube').value = data.youtube || "";
                     document.getElementById('cfg-tiktok').value = data.tiktok || "";
                 }
-            } catch(e) {}
+            } catch(e) { console.log(e); }
         }
 
-        document.getElementById('btn-save-cfg').addEventListener('click', async function() {
-            const telegram = document.getElementById('cfg-telegram').value;
-            const youtube = document.getElementById('cfg-youtube').value;
-            const tiktok = document.getElementById('cfg-tiktok').value;
+        window.saveSettingsData = async function() {
             try {
-                await setDoc(doc(db, "settings", "socials"), { telegram, youtube, tiktok });
+                await setDoc(doc(db, "settings", "socials"), { 
+                    telegram: document.getElementById('cfg-telegram').value, 
+                    youtube: document.getElementById('cfg-youtube').value, 
+                    tiktok: document.getElementById('cfg-tiktok').value 
+                });
                 alert("Đã lưu cấu hình link!");
             } catch (e) { alert("Lỗi: " + e.message); }
-        });
+        }
 
-        // 3. Thống kê
+        // Tải lượt xem
         async function loadStats() {
             try {
                 const docSnap = await getDoc(doc(db, "settings", "visits"));
-                if (docSnap.exists()) document.getElementById('stat-visits-total').innerText = docSnap.data().total || 0;
-            } catch(e) {}
+                if (docSnap.exists()) {
+                    document.getElementById('stat-visits-total').innerText = docSnap.data().total || 0;
+                }
+            } catch(e) { console.log(e); }
         }
 
-        // 4. Tải dữ liệu Mod (ĐÃ SỬA LỖI HIỂN THỊ)
+        // Tải danh sách Mod (Đã sửa lỗi không hiển thị)
         async function loadData() {
+            const tbody = document.getElementById('table-body');
             try {
                 const querySnapshot = await getDocs(collection(db, "mods"));
                 allMods = [];
                 querySnapshot.forEach((doc) => {
                     allMods.push({ id: doc.id, ...doc.data() });
                 });
-                renderTable();
+                renderTable(allMods);
                 document.getElementById('stat-total').innerText = allMods.length;
                 document.getElementById('stat-active').innerText = allMods.length;
-            } catch (e) { console.error("Lỗi: ", e); }
+            } catch (e) { 
+                tbody.innerHTML = '<tr><td colspan="5" style="color:red; text-align:center;">Lỗi tải dữ liệu</td></tr>';
+            }
         }
 
-        // 5. Hiển thị bảng
-        function renderTable(dataToRender = allMods) {
+        // Hiển thị bảng
+        function renderTable(dataToRender) {
             const tbody = document.getElementById('table-body');
             tbody.innerHTML = '';
-            dataToRender.forEach(mod => {
-                // Xử lý danh mục linh hoạt (chấp nhận cả tên cũ và mới)
-                let catName = 'MOD SKIN';
-                if(mod.category === 'page-proxy' || mod.category === 'Menu') catName = 'MENU';
-                else if(mod.category === 'page-dinhvi' || mod.category === 'Định vị') catName = 'ĐỊNH VỊ';
+            
+            if(dataToRender.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#aaa;">Chưa có dữ liệu</td></tr>';
+                return;
+            }
 
-                let linkType = "";
-                if(mod.link_main && mod.link_sub) linkType = "Cả 2";
+            dataToRender.forEach(mod => {
+                let catName = mod.category === 'page-proxy' ? 'MENU' : (mod.category === 'page-dinhvi' ? 'ĐỊNH VỊ' : 'MOD SKIN');
+                let linkType = "Chưa có";
+                if(mod.link && !mod.link_main) linkType = "Link Cũ"; // Tương thích file cũ
+                else if(mod.link_main && mod.link_sub) linkType = "Cả 2 Link";
                 else if(mod.link_main) linkType = "Link Chính";
                 else if(mod.link_sub) linkType = "Link Phụ";
-                else if(mod.link) linkType = "Link Cũ"; // Tương thích file cũ
-                else linkType = "Chưa có";
 
                 let tr = document.createElement('tr');
                 tr.innerHTML = `
@@ -320,46 +388,4 @@
                         <button class="btn-action btn-delete" onclick="deleteMod('${mod.id}')">Xóa</button>
                     </td>
                 `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        // Các hàm khác giữ nguyên
-        window.filterTable = function(category, tabElement) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            if(tabElement) tabElement.classList.add('active');
-            if(category === 'all') renderTable(allMods);
-            else renderTable(allMods.filter(m => m.category === category));
-        }
-        window.searchTable = function() {
-            const text = document.getElementById('search-input').value.toLowerCase();
-            renderTable(allMods.filter(m => m.name.toLowerCase().includes(text)));
-        }
-        window.toggleLinkInput = function(type) {
-            if(type === 'main') document.getElementById('group-main').style.display = document.getElementById('check-main').checked ? 'block' : 'none';
-            else document.getElementById('group-sub').style.display = document.getElementById('check-sub').checked ? 'block' : 'none';
-        }
-        
-        document.getElementById('btn-open-add-modal').addEventListener('click', function() {
-            document.getElementById('modal-form').classList.add('active');
-            document.getElementById('modal-title').innerText = "Thêm Mod Mới";
-            document.getElementById('mod-id').value = "";
-            document.getElementById('mod-name').value = "";
-            document.getElementById('mod-img').value = "";
-            document.getElementById('mod-link-main').value = "";
-            document.getElementById('mod-link-sub').value = "";
-            document.getElementById('check-main').checked = false;
-            document.getElementById('check-sub').checked = false;
-            document.getElementById('group-main').style.display = 'none';
-            document.getElementById('group-sub').style.display = 'none';
-        });
-        document.getElementById('btn-close-modal').addEventListener('click', function() { document.getElementById('modal-form').classList.remove('active'); });
-        
-        window.editMod = function(id) {
-            const mod = allMods.find(m => m.id === id);
-            if(!mod) return;
-            document.getElementById('modal-form').classList.add('active');
-            document.getElementById('modal-title').innerText = "Sửa Mod";
-            document.getElementById('mod-id').value = mod.id;
-            document.getElementById('mod-name').value = mod.name;
-            document.getEle
+                t
