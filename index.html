@@ -12,6 +12,7 @@
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
       import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+      // Cấu hình Firebase của Kovak
       const firebaseConfig = {
         apiKey: "AIzaSyBA6LXphLTRJw-cKECEPNAzODAkHB3oKHI",
         authDomain: "sq-mod-key.firebaseapp.com",
@@ -34,7 +35,6 @@
         
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #050505;
             background-image: url('https://i.ibb.co/0VKpd4C4/file-00000000031081fab71b349b2f53c583.png'); 
             background-size: cover;
             background-position: center;
@@ -45,25 +45,25 @@
             align-items: flex-start; 
             padding: 40px 20px; 
             color: #fff;
+            overflow-x: hidden; 
         }
 
         body::before {
             content: '';
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.5);
             z-index: -1;
         }
 
         .glass-container {
             width: 100%;
             max-width: 400px;
-            /* Làm nền tối hơn, bỏ hiệu ứng blur để máy yếu không bị lag */
             background: rgba(15, 15, 20, 0.85); 
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 30px;
             padding: 30px 20px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
             text-align: center;
             position: relative;
         }
@@ -75,7 +75,7 @@
             border-radius: 50%;
             padding: 3px;
             background: linear-gradient(135deg, #00e5ff, #0055ff, #00e5ff);
-            box-shadow: 0 0 20px rgba(0, 229, 255, 0.6);
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
         }
         .logo-wrapper img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid #111;}
 
@@ -83,7 +83,7 @@
             font-family: 'Orbitron', sans-serif;
             font-size: 26px; font-weight: 900;
             color: #ffd700; 
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
             margin-bottom: 10px;
             letter-spacing: 1px;
         }
@@ -91,56 +91,51 @@
         .socials-center { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; }
         .social-btn {
             width: 45px; height: 45px; border-radius: 14px;
-            background: #111; border: 1px solid #333;
+            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
             display: flex; justify-content: center; align-items: center;
-            font-size: 20px; text-decoration: none; transition: 0.2s;
+            font-size: 20px; text-decoration: none; transition: 0.3s;
         }
         .social-btn.telegram { color: #0088cc; }
         .social-btn.youtube { color: #ff0000; }
         .social-btn.tiktok { color: #00f2fe; }
-        .social-btn:active { background: #222; }
+        .social-btn:hover { background: rgba(255, 255, 255, 0.15); }
 
         .subtitle { font-size: 13px; color: #00e5ff; margin-bottom: 30px; letter-spacing: 1px; text-transform: uppercase; }
 
-        /* Ẩn trang con */
         .page { display: none; }
         #page-home { display: block; } 
 
-        /* Nút chuyển trang - Dùng thẻ a để không bao giờ bị đơ */
         .main-category-btn {
             display: flex; align-items: center; justify-content: space-between;
-            background: #111; border: 1px solid #333;
+            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 18px; padding: 20px 25px; margin-bottom: 15px;
-            cursor: pointer; transition: 0.2s; text-decoration: none; color: #fff;
+            cursor: pointer; transition: 0.3s; text-decoration: none; color: #fff;
         }
-        .main-category-btn:active { background: #222; border-color: #00e5ff; }
+        .main-category-btn:active, .main-category-btn:hover { background: rgba(0, 229, 255, 0.1); border-color: #00e5ff; }
         .main-category-title { font-family: 'Orbitron', sans-serif; font-size: 18px; font-weight: 700; color: #00e5ff; display: flex; align-items: center; gap: 10px; }
         .main-category-btn .fa-chevron-right { color: #aaa; font-size: 16px; }
 
-        /* Thanh công cụ trang con */
         .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .back-btn, .how-to-btn {
             display: inline-flex; align-items: center;
-            background: #1a1a1a; border: 1px solid #444;
+            background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255,255,255,0.2);
             padding: 8px 15px; border-radius: 10px; color: #fff; font-weight: bold; font-size: 12px;
             cursor: pointer; text-decoration: none; text-transform: uppercase;
         }
-        .back-btn:active, .how-to-btn:active { background: #333; }
         .back-btn i { margin-right: 8px; }
         .how-to-btn { color: #ffd700; border-color: rgba(255, 215, 0, 0.4); }
 
         .page-title { font-family: 'Orbitron', sans-serif; font-size: 20px; color: #00e5ff; margin-bottom: 20px; text-align: left; }
 
-        /* Thẻ Mod */
         .item-card {
             display: flex; align-items: center;
-            background: #111; border: 1px solid #333;
+            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 20px; padding: 12px; margin-bottom: 15px;
             text-decoration: none; color: #fff; text-align: left; position: relative;
         }
-        .item-card:active { background: #222; }
+        .item-card:hover { background: rgba(255, 255, 255, 0.08); }
 
-        .item-img { width: 90px; height: 90px; border-radius: 14px; object-fit: cover; border: 1px solid #333; flex-shrink: 0; background: #000; }
+        .item-img { width: 90px; height: 90px; border-radius: 14px; object-fit: cover; border: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; background: #000; }
         
         .item-info { margin-left: 15px; flex: 1; overflow: hidden; }
         .item-title { font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: 800; color: #00fa9a; line-height: 1.2; margin-bottom: 5px; text-transform: uppercase; }
@@ -150,14 +145,13 @@
 
         .footer-text { font-size: 11px; color: #777; margin-top: 25px; text-transform: uppercase; }
 
-        /* Popup hướng dẫn */
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.9); z-index: 999; justify-content: center; align-items: center; padding: 20px;
+            background: rgba(0, 0, 0, 0.8); z-index: 999; justify-content: center; align-items: center; padding: 20px;
         }
         .modal-overlay.active { display: flex; }
         .modal-content {
-            background: #111; border: 1px solid #00e5ff; border-radius: 20px; padding: 25px; max-width: 350px; width: 100%; text-align: left;
+            background: #111; border: 1px solid #333; border-radius: 20px; padding: 25px; max-width: 350px; width: 100%; text-align: left;
         }
         .modal-title { color: #ffd700; font-size: 18px; margin-bottom: 15px; text-align: center; border-bottom: 1px solid #333; padding-bottom: 10px; font-family: 'Orbitron', sans-serif;}
         .modal-body { font-size: 14px; color: #ccc; line-height: 1.6; }
@@ -182,7 +176,8 @@
             <h1 class="title">SQ MOD VIP</h1>
             
             <div class="socials-center">
-                <a href="https://t.me/syquyen" class="social-btn telegram" target="_blank"><i class="fa-brands fa-telegram"></i></a>
+                <!-- ĐÃ CẬP NHẬT LINK TELEGRAM MỚI TẠI ĐÂY -->
+                <a href="https://t.me/sqmodvip" class="social-btn telegram" target="_blank"><i class="fa-brands fa-telegram"></i></a>
                 <a href="https://www.youtube.com/@sqmod" class="social-btn youtube" target="_blank"><i class="fa-brands fa-youtube"></i></a>
                 <a href="https://tiktok.com/@sqmodvip" class="social-btn tiktok" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
             </div>
@@ -214,15 +209,9 @@
                 <a href="javascript:void(0);" class="how-to-btn" onclick="openModal('modal-app')">Cách Cài</a>
             </div>
             <div class="page-title">DANH MỤC MENU</div>
-
-            <a href="https://link4m.net/go/8ERHO0n" class="item-card">
-                <span class="badge-ffth">VIP</span>
-                <img src="https://i.ibb.co/0x371y9/Screenshot-2026-11-10-16-19-24-475-com-dts-freefireth.jpg" class="item-img" alt="Shin Mod">
-                <div class="item-info">
-                    <div class="item-title">SHIN MOD<br>CRACK NO KEY</div>
-                    <div class="item-desc">Vượt 1</div>
-                </div>
-            </a>
+            <div id="firebase-menu-list">
+                <p style="text-align:center; color:#aaa;">Đang tải dữ liệu...</p>
+            </div>
         </div>
 
         <!-- TRANG CON: ĐỊNH VỊ -->
@@ -232,24 +221,9 @@
                 <a href="javascript:void(0);" class="how-to-btn" onclick="openModal('modal-file')">Cách Cài</a>
             </div>
             <div class="page-title">DANH MỤC ĐỊNH VỊ</div>
-
-            <a href="https://link4m.org/VjJORt" class="item-card">
-                <span class="badge-ffth">FFTH</span>
-                <img src="https://i.ibb.co/Q7PyZMt5/Screenshot-2026-11-10-15-11-28-102-com-dts-freefireth.jpg" class="item-img" alt="Định vị trắng tím">
-                <div class="item-info">
-                    <div class="item-title">ĐỊNH VỊ TRẮNG TÍM</div>
-                    <div class="item-desc">Vượt 1</div>
-                </div>
-            </a>
-
-            <a href="https://link4m.net/l6eevJ" class="item-card">
-                <span class="badge-ffth">FFTH</span>
-                <img src="https://i.ibb.co/nM2DT36x/Screenshot-2026-11-10-15-07-56-514-com-dts-freefireth.jpg" class="item-img" alt="Định vị súng và trang phục trắng xanh">
-                <div class="item-info">
-                    <div class="item-title">SÚNG & TRANG PHỤC<br>TRẮNG XANH</div>
-                    <div class="item-desc">Vượt 1</div>
-                </div>
-            </a>
+            <div id="firebase-dinhvi-list">
+                <p style="text-align:center; color:#aaa;">Đang tải dữ liệu...</p>
+            </div>
         </div>
 
         <!-- TRANG CON: MOD SKIN -->
@@ -259,57 +233,9 @@
                 <a href="javascript:void(0);" class="how-to-btn" onclick="openModal('modal-file')">Cách Cài</a>
             </div>
             <div class="page-title">DANH MỤC MOD SKIN</div>
-
             <div id="firebase-skin-list">
-                
-                <!-- MOD CŨ -->
-                <a href="https://link4m.net/z5FqA7PV" class="item-card">
-                    <span class="badge-ffth">FFTH</span>
-                    <img src="https://i.ibb.co/cXyvr9H0/Screenshot-2026-11-10-13-53-38-932-com-dts-freefireth.jpg" class="item-img" alt="Báo Hồng">
-                    <div class="item-info">
-                        <div class="item-title">BÁO HỒNG</div>
-                        <div class="item-desc">Vượt 1</div>
-                    </div>
-                </a>
-
-                <a href="https://link4m.net/0gFfm0vf" class="item-card">
-                    <span class="badge-ffth">FFTH</span>
-                    <img src="https://i.ibb.co/GvQNBpW0/Screenshot-2026-11-10-13-52-15-081-com-dts-freefireth.jpg" class="item-img" alt="Roblox">
-                    <div class="item-info">
-                        <div class="item-title">ROBLOX</div>
-                        <div class="item-desc">Vượt 1</div>
-                    </div>
-                </a>
-
-                <a href="https://link4m.net/hkxIg" class="item-card">
-                    <span class="badge-ffth">FFTH</span>
-                    <img src="https://i.ibb.co/5h0V3JXM/Screenshot-2026-11-10-13-20-33-984-com-dts-freefireth.jpg" class="item-img" alt="Người Nhện Đen">
-                    <div class="item-info">
-                        <div class="item-title">NGƯỜI NHỆN ĐEN</div>
-                        <div class="item-desc">Vượt 1</div>
-                    </div>
-                </a>
-
-                <a href="https://link4m.org/Vhmr2SUN" class="item-card">
-                    <span class="badge-ffth">FFTH</span>
-                    <img src="https://i.ibb.co/67LB926n/Screenshot-2026-11-10-13-18-35-849-com-dts-freefireth.jpg" class="item-img" alt="Luffy Gear5">
-                    <div class="item-info">
-                        <div class="item-title">LUFFY GEAR5</div>
-                        <div class="item-desc">Vượt 1</div>
-                    </div>
-                </a>
-
-                <a href="https://link4m.org/cQ6MlFaJ" class="item-card">
-                    <span class="badge-ffth">FFTH</span>
-                    <img src="https://i.ibb.co/JwnHbcNQ/Screenshot-2026-11-10-13-16-04-569-com-dts-freefireth.jpg" class="item-img" alt="Cao Bồi">
-                    <div class="item-info">
-                        <div class="item-title">CAO BỒI</div>
-                        <div class="item-desc">Vượt 1</div>
-                    </div>
-                </a>
-
+                <p style="text-align:center; color:#aaa;">Đang tải dữ liệu...</p>
             </div>
-
         </div>
 
     </div>
@@ -350,7 +276,6 @@
     </div>
 
     <script>
-        // Chuyển trang cơ bản, tương thích 100% thiết bị
         function showPage(pageId) {
             let pages = document.querySelectorAll('.page');
             pages.forEach(page => { page.style.display = 'none'; });
@@ -375,7 +300,6 @@
             });
         }
 
-        // Hàm tải dữ liệu mới (chỉ chạy khi mở bằng GitHub, không chạy file cục bộ)
         async function loadModsFromFirebase() {
             if (!window.db) return; 
 
@@ -383,9 +307,21 @@
             
             try {
                 const querySnapshot = await getDocs(collection(window.db, "mods"));
-                const listContainer = document.getElementById('firebase-skin-list');
                 
-                if (querySnapshot.empty) return;
+                const listMenu = document.getElementById('firebase-menu-list');
+                const listDinhVi = document.getElementById('firebase-dinhvi-list');
+                const listSkin = document.getElementById('firebase-skin-list');
+                
+                listMenu.innerHTML = '';
+                listDinhVi.innerHTML = '';
+                listSkin.innerHTML = '';
+
+                if (querySnapshot.empty) {
+                    listMenu.innerHTML = '<p style="text-align:center; color:#aaa;">Đang cập nhật...</p>';
+                    listDinhVi.innerHTML = '<p style="text-align:center; color:#aaa;">Đang cập nhật...</p>';
+                    listSkin.innerHTML = '<p style="text-align:center; color:#aaa;">Đang cập nhật...</p>';
+                    return;
+                }
 
                 querySnapshot.forEach((doc) => {
                     const data = doc.data();
@@ -399,7 +335,14 @@
                             </div>
                         </a>
                     `;
-                    listContainer.insertAdjacentHTML('beforeend', itemHTML);
+
+                    if(data.category === 'page-proxy') {
+                        listMenu.insertAdjacentHTML('beforeend', itemHTML);
+                    } else if(data.category === 'page-dinhvi') {
+                        listDinhVi.insertAdjacentHTML('beforeend', itemHTML);
+                    } else {
+                        listSkin.insertAdjacentHTML('beforeend', itemHTML);
+                    }
                 });
             } catch (error) {
                 console.error("Lỗi tải dữ liệu: ", error);
@@ -409,4 +352,4 @@
         setTimeout(loadModsFromFirebase, 1000);
     </script>
 </body>
-                </html>
+</html>
