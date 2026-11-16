@@ -211,68 +211,6 @@
         </div>
     </div>
 
-    <script>
-        // MẬT KHẨU MỚI CỦA KOVAK
-        const ADMIN_PASS = "1982011"; 
-
-        document.getElementById('btn-login').addEventListener('click', function() {
-            let pass = document.getElementById('admin-pass').value;
-            let msg = document.getElementById('login-msg');
-            
-            if (pass === ADMIN_PASS) {
-                msg.style.display = 'block';
-                msg.className = 'msg-success';
-                msg.innerText = "✅ Mật khẩu đúng! Đang đăng nhập...";
-                
-                setTimeout(() => {
-                    document.getElementById('login-box').style.display = 'none';
-                    document.getElementById('admin-panel').style.display = 'block';
-                    if(window.initAdminData) window.initAdminData();
-                }, 600);
-            } else {
-                msg.style.display = 'block';
-                msg.className = 'msg-error';
-                msg.innerText = "❌ Sai mật khẩu! Vui lòng thử lại.";
-            }
-        });
-
-        document.getElementById('btn-logout').addEventListener('click', function() { location.reload(); });
-
-        document.getElementById('btn-open-add-modal').addEventListener('click', function() {
-            document.getElementById('modal-form').classList.add('active');
-            document.getElementById('modal-title').innerText = "Thêm Mod Mới";
-            document.getElementById('mod-id').value = "";
-            document.getElementById('mod-name').value = "";
-            document.getElementById('mod-img').value = "";
-            document.getElementById('mod-link-main').value = "";
-            document.getElementById('mod-link-sub').value = "";
-            document.getElementById('check-main').checked = false;
-            document.getElementById('check-sub').checked = false;
-            document.getElementById('group-main').style.display = 'none';
-            document.getElementById('group-sub').style.display = 'none';
-        });
-
-        document.getElementById('btn-close-modal').addEventListener('click', function() {
-            document.getElementById('modal-form').classList.remove('active');
-        });
-
-        function toggleLinkInput(type) {
-            if(type === 'main') {
-                document.getElementById('group-main').style.display = document.getElementById('check-main').checked ? 'block' : 'none';
-            } else {
-                document.getElementById('group-sub').style.display = document.getElementById('check-sub').checked ? 'block' : 'none';
-            }
-        }
-
-        document.getElementById('btn-save-cfg').addEventListener('click', function() {
-            if(window.saveSettingsData) window.saveSettingsData();
-        });
-
-        document.getElementById('btn-save-modal').addEventListener('click', function() {
-            if(window.saveModData) window.saveModData();
-        });
-    </script>
-
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -291,12 +229,25 @@
         const db = getFirestore(app);
         let allMods = [];
 
-        window.initAdminData = async function() {
-            loadSettings();
-            loadStats();
-            loadData();
-        }
+        // 1. Sự kiện đăng nhập
+        document.getElementById('btn-login').addEventListener('click', function() {
+            let pass = document.getElementById('admin-pass').value;
+            let msg = document.getElementById('login-msg');
+            if (pass === "SỸ QUYỀN K11") {
+                msg.style.display = 'block'; msg.className = 'msg-success'; msg.innerText = "✅ Đang đăng nhập...";
+                setTimeout(() => {
+                    document.getElementById('login-box').style.display = 'none';
+                    document.getElementById('admin-panel').style.display = 'block';
+                    loadSettings(); loadStats(); loadData();
+                }, 600);
+            } else {
+                msg.style.display = 'block'; msg.className = 'msg-error'; msg.innerText = "❌ Sai mật khẩu!";
+            }
+        });
 
+        document.getElementById('btn-logout').addEventListener('click', () => location.reload());
+
+        // 2. Cấu hình mạng xã hội
         async function loadSettings() {
             try {
                 const docSnap = await getDoc(doc(db, "settings", "socials"));
@@ -306,31 +257,28 @@
                     document.getElementById('cfg-youtube').value = data.youtube || "";
                     document.getElementById('cfg-tiktok').value = data.tiktok || "";
                 }
-            } catch(e) { console.log(e); }
+            } catch(e) {}
         }
 
-        window.saveSettingsData = async function() {
+        document.getElementById('btn-save-cfg').addEventListener('click', async function() {
             const telegram = document.getElementById('cfg-telegram').value;
             const youtube = document.getElementById('cfg-youtube').value;
             const tiktok = document.getElementById('cfg-tiktok').value;
-
             try {
                 await setDoc(doc(db, "settings", "socials"), { telegram, youtube, tiktok });
-                alert("Đã lưu cấu hình link mạng xã hội!");
+                alert("Đã lưu cấu hình link!");
             } catch (e) { alert("Lỗi: " + e.message); }
-        }
+        });
 
+        // 3. Thống kê
         async function loadStats() {
             try {
-                const statsRef = doc(db, "settings", "visits");
-                const docSnap = await getDoc(statsRef);
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    document.getElementById('stat-visits-total').innerText = data.total || 0;
-                }
-            } catch(e) { console.log(e); }
+                const docSnap = await getDoc(doc(db, "settings", "visits"));
+                if (docSnap.exists()) document.getElementById('stat-visits-total').innerText = docSnap.data().total || 0;
+            } catch(e) {}
         }
 
+        // 4. Tải dữ liệu Mod (ĐÃ SỬA LỖI HIỂN THỊ)
         async function loadData() {
             try {
                 const querySnapshot = await getDocs(collection(db, "mods"));
@@ -344,39 +292,74 @@
             } catch (e) { console.error("Lỗi: ", e); }
         }
 
+        // 5. Hiển thị bảng
+        function renderTable(dataToRender = allMods) {
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = '';
+            dataToRender.forEach(mod => {
+                // Xử lý danh mục linh hoạt (chấp nhận cả tên cũ và mới)
+                let catName = 'MOD SKIN';
+                if(mod.category === 'page-proxy' || mod.category === 'Menu') catName = 'MENU';
+                else if(mod.category === 'page-dinhvi' || mod.category === 'Định vị') catName = 'ĐỊNH VỊ';
+
+                let linkType = "";
+                if(mod.link_main && mod.link_sub) linkType = "Cả 2";
+                else if(mod.link_main) linkType = "Link Chính";
+                else if(mod.link_sub) linkType = "Link Phụ";
+                else if(mod.link) linkType = "Link Cũ"; // Tương thích file cũ
+                else linkType = "Chưa có";
+
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><img src="${mod.img}" width="40" height="40" style="border-radius: 6px; object-fit: cover;" onerror="this.src='https://i.ibb.co/0VKpd4C4/file-00000000031081fab71b349b2f53c583.png'"></td>
+                    <td><b style="color:#f0f6fc;">${mod.name}</b></td>
+                    <td><span style="color:#8b949e;">${catName}</span></td>
+                    <td><span style="color:#d29922;">${linkType}</span></td>
+                    <td>
+                        <button class="btn-action" onclick="editMod('${mod.id}')">Sửa</button>
+                        <button class="btn-action btn-delete" onclick="deleteMod('${mod.id}')">Xóa</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Các hàm khác giữ nguyên
         window.filterTable = function(category, tabElement) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             if(tabElement) tabElement.classList.add('active');
             if(category === 'all') renderTable(allMods);
             else renderTable(allMods.filter(m => m.category === category));
         }
-
         window.searchTable = function() {
             const text = document.getElementById('search-input').value.toLowerCase();
             renderTable(allMods.filter(m => m.name.toLowerCase().includes(text)));
         }
-
-        function renderTable(dataToRender = allMods) {
-            const tbody = document.getElementById('table-body');
-            tbody.innerHTML = '';
-            
-            dataToRender.forEach(mod => {
-                let catName = mod.category === 'page-proxy' ? 'MENU' : (mod.category === 'page-dinhvi' ? 'ĐỊNH VỊ' : 'MOD SKIN');
-                
-                // KIỂM TRA TƯƠNG THÍCH NGƯỢC: Nếu là file cũ (chỉ có link)
-                let linkType = "";
-                if(mod.link_main && mod.link_sub) linkType = "Cả 2 link";
-                else if(mod.link_main) linkType = "Link Chính";
-                else if(mod.link_sub) linkType = "Link Phụ";
-                else if(mod.link) linkType = "Link Cũ (Cần sửa lại)";
-                else linkType = "Chưa có";
-
-                let tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><img src="${mod.img}" width="40" height="40" style="border-radius: 6px; object-fit: cover; border: 1px solid #30363d;" onerror="this.src='https://i.ibb.co/0VKpd4C4/file-00000000031081fab71b349b2f53c583.png'"></td>
-                    <td><b style="color:#f0f6fc;">${mod.name}</b></td>
-                    <td><span style="color:#8b949e;">${catName}</span></td>
-                    <td><span style="color:${mod.link ? '#f85149' : '#d29922'};">${linkType}</span></td>
-                    <td>
-                        <button class="btn-action" onclick="editMod('${mod.id}')">Sửa</button>
- 
+        window.toggleLinkInput = function(type) {
+            if(type === 'main') document.getElementById('group-main').style.display = document.getElementById('check-main').checked ? 'block' : 'none';
+            else document.getElementById('group-sub').style.display = document.getElementById('check-sub').checked ? 'block' : 'none';
+        }
+        
+        document.getElementById('btn-open-add-modal').addEventListener('click', function() {
+            document.getElementById('modal-form').classList.add('active');
+            document.getElementById('modal-title').innerText = "Thêm Mod Mới";
+            document.getElementById('mod-id').value = "";
+            document.getElementById('mod-name').value = "";
+            document.getElementById('mod-img').value = "";
+            document.getElementById('mod-link-main').value = "";
+            document.getElementById('mod-link-sub').value = "";
+            document.getElementById('check-main').checked = false;
+            document.getElementById('check-sub').checked = false;
+            document.getElementById('group-main').style.display = 'none';
+            document.getElementById('group-sub').style.display = 'none';
+        });
+        document.getElementById('btn-close-modal').addEventListener('click', function() { document.getElementById('modal-form').classList.remove('active'); });
+        
+        window.editMod = function(id) {
+            const mod = allMods.find(m => m.id === id);
+            if(!mod) return;
+            document.getElementById('modal-form').classList.add('active');
+            document.getElementById('modal-title').innerText = "Sửa Mod";
+            document.getElementById('mod-id').value = mod.id;
+            document.getElementById('mod-name').value = mod.name;
+            document.getEle
