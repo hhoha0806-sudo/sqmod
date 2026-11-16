@@ -29,39 +29,141 @@
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-image: url('https://i.ibb.co/0VKpd4C4/file-00000000031081fab71b349b2f53c583.png'); background-size: cover; background-position: center; background-attachment: fixed; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; padding: 40px 20px; color: #fff; overflow-x: hidden; }
-        body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: -1; }
         
-        /* ĐÃ KHÓA VUỐT KÉO BẢNG */
-        .glass-container { 
-            width: 100%; max-width: 400px; background: rgba(15, 15, 20, 0.85); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 30px; padding: 30px 20px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5); text-align: center; position: relative;
-            touch-action: none; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent;
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-image: url('https://i.ibb.co/0VKpd4C4/file-00000000031081fab71b349b2f53c583.png'); 
+            background-size: cover; 
+            background-position: center; 
+            background-attachment: fixed; 
+            min-height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+            align-items: flex-start; 
+            padding: 40px 20px; 
+            color: #fff; 
+            /* Chỉ ẩn thanh cuộn ngang, vẫn cho phép cuộn dọc */
+            overflow-x: hidden; 
         }
         
-        .logo-wrapper { position: relative; width: 110px; height: 110px; margin: 0 auto 15px; border-radius: 50%; padding: 3px; background: linear-gradient(135deg, #00e5ff, #0055ff, #00e5ff); box-shadow: 0 0 20px rgba(0, 229, 255, 0.5); }
+        body::before { 
+            content: ''; 
+            position: fixed; 
+            top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0, 0, 0, 0.5); 
+            z-index: -1; 
+        }
+        
+        .glass-container { 
+            width: 100%; 
+            max-width: 400px; 
+            background: rgba(15, 15, 20, 0.85); 
+            border: 1px solid rgba(255, 255, 255, 0.15); 
+            border-radius: 30px; 
+            padding: 30px 20px; 
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5); 
+            text-align: center; 
+            position: relative; 
+        }
+        
+        .logo-wrapper { 
+            position: relative; 
+            width: 110px; height: 110px; 
+            margin: 0 auto 15px; 
+            border-radius: 50%; 
+            padding: 3px; 
+            background: linear-gradient(135deg, #00e5ff, #0055ff, #00e5ff); 
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.5); 
+        }
         .logo-wrapper img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid #111;}
-        .title { font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900; color: #ffd700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5); margin-bottom: 10px; letter-spacing: 1px; }
+        
+        .title { 
+            font-family: 'Orbitron', sans-serif; 
+            font-size: 26px; font-weight: 900; 
+            color: #ffd700; 
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5); 
+            margin-bottom: 10px; 
+            letter-spacing: 1px; 
+        }
+        
         .socials-center { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; }
-        .social-btn { width: 45px; height: 45px; border-radius: 14px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); display: flex; justify-content: center; align-items: center; font-size: 20px; text-decoration: none; transition: 0.3s; }
+        .social-btn { 
+            width: 45px; height: 45px; 
+            border-radius: 14px; 
+            background: rgba(255, 255, 255, 0.05); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            display: flex; justify-content: center; align-items: center; 
+            font-size: 20px; text-decoration: none; transition: 0.3s; 
+        }
         .social-btn.telegram { color: #0088cc; } .social-btn.youtube { color: #ff0000; } .social-btn.tiktok { color: #00f2fe; }
         .social-btn:hover { background: rgba(255, 255, 255, 0.15); }
+        
         .subtitle { font-size: 13px; color: #00e5ff; margin-bottom: 30px; letter-spacing: 1px; text-transform: uppercase; }
-        .page { display: none; } #page-home { display: block; } 
-        .main-category-btn { display: flex; align-items: center; justify-content: space-between; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 18px; padding: 20px 25px; margin-bottom: 15px; cursor: pointer; transition: 0.3s; text-decoration: none; color: #fff; touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+        
+        .page { display: none; } 
+        #page-home { display: block; } 
+        
+        .main-category-btn { 
+            display: flex; align-items: center; justify-content: space-between; 
+            background: rgba(255, 255, 255, 0.03); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            border-radius: 18px; 
+            padding: 20px 25px; 
+            margin-bottom: 15px; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            text-decoration: none; 
+            color: #fff; 
+            /* Chỉ chặn bôi đen chữ trên nút, không chặn vuốt trang */
+            user-select: none; 
+            -webkit-user-select: none; 
+        }
         .main-category-btn:active, .main-category-btn:hover { background: rgba(0, 229, 255, 0.1); border-color: #00e5ff; }
         .main-category-title { font-family: 'Orbitron', sans-serif; font-size: 18px; font-weight: 700; color: #00e5ff; display: flex; align-items: center; gap: 10px; }
         .main-category-btn .fa-chevron-right { color: #aaa; font-size: 16px; }
+        
         .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .back-btn, .how-to-btn { display: inline-flex; align-items: center; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 10px; color: #fff; font-weight: bold; font-size: 12px; cursor: pointer; text-decoration: none; text-transform: uppercase; touch-action: manipulation; }
-        .back-btn i { margin-right: 8px; } .how-to-btn { color: #ffd700; border-color: rgba(255, 215, 0, 0.4); }
+        .back-btn, .how-to-btn { 
+            display: inline-flex; align-items: center; 
+            background: rgba(255, 255, 255, 0.1); 
+            border: 1px solid rgba(255,255,255,0.2); 
+            padding: 8px 15px; 
+            border-radius: 10px; 
+            color: #fff; 
+            font-weight: bold; 
+            font-size: 12px; 
+            cursor: pointer; 
+            text-decoration: none; 
+            text-transform: uppercase; 
+        }
+        .back-btn i { margin-right: 8px; } 
+        .how-to-btn { color: #ffd700; border-color: rgba(255, 215, 0, 0.4); }
+        
         .page-title { font-family: 'Orbitron', sans-serif; font-size: 20px; color: #00e5ff; margin-bottom: 20px; text-align: left; }
-        .item-card { display: flex; align-items: center; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 12px; margin-bottom: 15px; text-decoration: none; color: #fff; text-align: left; position: relative; touch-action: manipulation; cursor: pointer; }
+        
+        .item-card { 
+            display: flex; 
+            align-items: center; 
+            background: rgba(255, 255, 255, 0.03); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            border-radius: 20px; 
+            padding: 12px; 
+            margin-bottom: 15px; 
+            text-decoration: none; 
+            color: #fff; 
+            text-align: left; 
+            position: relative; 
+            cursor: pointer; 
+        }
         .item-card:hover { background: rgba(255, 255, 255, 0.08); }
+        
         .item-img { width: 90px; height: 90px; border-radius: 14px; object-fit: cover; border: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; background: #000; }
         .item-info { margin-left: 15px; flex: 1; overflow: hidden; }
         .item-title { font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: 800; color: #00fa9a; line-height: 1.2; margin-bottom: 5px; text-transform: uppercase; }
         .item-desc { font-size: 12px; color: #aaa; }
+        
         .badge-ffth { position: absolute; top: 0; left: 0; background: #ff0033; color: #fff; font-size: 11px; font-weight: 900; padding: 4px 10px; border-radius: 20px 0 15px 0; z-index: 10; }
+        
         .footer-text { font-size: 11px; color: #777; margin-top: 25px; text-transform: uppercase; }
         
         .link-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 999; justify-content: center; align-items: center; padding: 20px; }
@@ -158,14 +260,22 @@
         function closeLinkModal() { document.getElementById('link-choice-modal').classList.remove('active'); }
 
         window.handleDownload = function(link_main, link_sub, old_link) {
-            if (!link_main && !link_sub && old_link) { window.open(old_link, '_blank'); return; }
+            if (!link_main && !link_sub && old_link) {
+                window.open(old_link, '_blank');
+                return;
+            }
+            
             if (link_main && link_sub) {
                 document.getElementById('btn-choice-main').href = link_main;
                 document.getElementById('btn-choice-sub').href = link_sub;
                 document.getElementById('link-choice-modal').classList.add('active');
-            } else if (link_main) { window.open(link_main, '_blank'); } 
-            else if (link_sub) { window.open(link_sub, '_blank'); } 
-            else { alert("File này đang cập nhật!"); }
+            } else if (link_main) {
+                window.open(link_main, '_blank');
+            } else if (link_sub) {
+                window.open(link_sub, '_blank');
+            } else {
+                alert("File này đang cập nhật!");
+            }
         }
 
         async function loadSettingsAndStats() {
@@ -178,6 +288,7 @@
                     if(data.youtube) document.getElementById('link-yt').href = data.youtube;
                     if(data.tiktok) document.getElementById('link-tt').href = data.tiktok;
                 }
+
                 const statsRef = doc(window.db, "settings", "visits");
                 await updateDoc(statsRef, { total: increment(1) });
             } catch(e) { console.log("Lỗi settings/stats: ", e); }
@@ -186,6 +297,7 @@
         async function loadModsFromFirebase() {
             if (!window.db) return; 
             const { collection, getDocs } = window.fbTools;
+            
             try {
                 const querySnapshot = await getDocs(collection(window.db, "mods"));
                 const listMenu = document.getElementById('firebase-menu-list');
@@ -203,6 +315,7 @@
 
                 querySnapshot.forEach((doc) => {
                     const data = doc.data();
+                    
                     const lMain = data.link_main ? `'${data.link_main}'` : 'null';
                     const lSub = data.link_sub ? `'${data.link_sub}'` : 'null';
                     const lOld = data.link ? `'${data.link}'` : 'null';
@@ -225,7 +338,10 @@
             } catch (error) { console.error("Lỗi tải dữ liệu: ", error); }
         }
 
-        setTimeout(() => { loadSettingsAndStats(); loadModsFromFirebase(); }, 1000);
+        setTimeout(() => {
+            loadSettingsAndStats();
+            loadModsFromFirebase();
+        }, 1000);
     </script>
 </body>
-    </html>
+</html>
