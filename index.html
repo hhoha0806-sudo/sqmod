@@ -3,376 +3,247 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ Thống Quản Trị - SQ MOD</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>SQ MOD VIP - Danh Mục</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+      import { getFirestore, collection, getDocs, doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyBA6LXphLTRJw-cKECEPNAzODAkHB3oKHI",
+        authDomain: "sq-mod-key.firebaseapp.com",
+        projectId: "sq-mod-key",
+        storageBucket: "sq-mod-key.firebasestorage.app",
+        messagingSenderId: "1027007715479",
+        appId: "1:1027007715479:web:e341f8f70978f2058e71d2",
+        measurementId: "G-2J4WVTPM8C"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      window.db = db;
+      window.fbTools = { collection, getDocs, doc, getDoc, updateDoc, increment };
+    </script>
+
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background-color: #0d1117; color: #c9d1d9; padding: 30px 20px; min-height: 100vh; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-image: url('https://i.ibb.co/0VKpd4C4/file-00000000031081fab71b349b2f53c583.png'); background-size: cover; background-position: center; background-attachment: fixed; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; padding: 40px 20px; color: #fff; overflow-x: hidden; }
+        body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: -1; }
+        .glass-container { width: 100%; max-width: 400px; background: rgba(15, 15, 20, 0.85); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 30px; padding: 30px 20px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5); text-align: center; position: relative; }
+        .logo-wrapper { position: relative; width: 110px; height: 110px; margin: 0 auto 15px; border-radius: 50%; padding: 3px; background: linear-gradient(135deg, #00e5ff, #0055ff, #00e5ff); box-shadow: 0 0 20px rgba(0, 229, 255, 0.5); }
+        .logo-wrapper img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid #111;}
+        .title { font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900; color: #ffd700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5); margin-bottom: 10px; letter-spacing: 1px; }
+        .socials-center { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; }
+        .social-btn { width: 45px; height: 45px; border-radius: 14px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); display: flex; justify-content: center; align-items: center; font-size: 20px; text-decoration: none; transition: 0.3s; }
+        .social-btn.telegram { color: #0088cc; } .social-btn.youtube { color: #ff0000; } .social-btn.tiktok { color: #00f2fe; }
+        .social-btn:hover { background: rgba(255, 255, 255, 0.15); }
+        .subtitle { font-size: 13px; color: #00e5ff; margin-bottom: 30px; letter-spacing: 1px; text-transform: uppercase; }
+        .page { display: none; } #page-home { display: block; } 
+        .main-category-btn { display: flex; align-items: center; justify-content: space-between; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 18px; padding: 20px 25px; margin-bottom: 15px; cursor: pointer; transition: 0.3s; text-decoration: none; color: #fff; }
+        .main-category-btn:active, .main-category-btn:hover { background: rgba(0, 229, 255, 0.1); border-color: #00e5ff; }
+        .main-category-title { font-family: 'Orbitron', sans-serif; font-size: 18px; font-weight: 700; color: #00e5ff; display: flex; align-items: center; gap: 10px; }
+        .main-category-btn .fa-chevron-right { color: #aaa; font-size: 16px; }
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .back-btn, .how-to-btn { display: inline-flex; align-items: center; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 10px; color: #fff; font-weight: bold; font-size: 12px; cursor: pointer; text-decoration: none; text-transform: uppercase; }
+        .back-btn i { margin-right: 8px; } .how-to-btn { color: #ffd700; border-color: rgba(255, 215, 0, 0.4); }
+        .page-title { font-family: 'Orbitron', sans-serif; font-size: 20px; color: #00e5ff; margin-bottom: 20px; text-align: left; }
+        .item-card { display: flex; align-items: center; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 12px; margin-bottom: 15px; text-decoration: none; color: #fff; text-align: left; position: relative; cursor: pointer;}
+        .item-card:hover { background: rgba(255, 255, 255, 0.08); }
+        .item-img { width: 90px; height: 90px; border-radius: 14px; object-fit: cover; border: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; background: #000; }
+        .item-info { margin-left: 15px; flex: 1; overflow: hidden; }
+        .item-title { font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: 800; color: #00fa9a; line-height: 1.2; margin-bottom: 5px; text-transform: uppercase; }
+        .item-desc { font-size: 12px; color: #aaa; }
+        .badge-ffth { position: absolute; top: 0; left: 0; background: #ff0033; color: #fff; font-size: 11px; font-weight: 900; padding: 4px 10px; border-radius: 20px 0 15px 0; z-index: 10; }
+        .footer-text { font-size: 11px; color: #777; margin-top: 25px; text-transform: uppercase; }
         
-        /* Login Box */
-        #login-box { max-width: 380px; margin: 100px auto; background: #161b22; padding: 35px 25px; border-radius: 8px; border: 1px solid #30363d; }
-        #login-box h2 { margin-bottom: 20px; color: #f0f6fc; font-size: 20px; font-weight: 600; text-align: center;}
-        #login-box input { width: 100%; padding: 10px 12px; margin-bottom: 15px; background: #0d1117; border: 1px solid #30363d; color: #c9d1d9; border-radius: 6px; outline: none; }
-        #login-box button { width: 100%; padding: 10px; background: #238636; color: #fff; border: 1px solid rgba(240,246,252,0.1); border-radius: 6px; font-weight: 600; font-size: 14px; cursor: pointer; transition: 0.2s; }
-        #login-box button:hover { background: #2ea043; }
-
-        /* Giao diện Admin */
-        #admin-panel { display: none; max-width: 1100px; margin: 0 auto; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #30363d; }
-        .header h1 { font-size: 20px; font-weight: 600; color: #f0f6fc; }
-        .btn-logout { padding: 6px 15px; background: transparent; border: 1px solid #30363d; color: #c9d1d9; border-radius: 6px; font-weight: 500; cursor: pointer; font-size: 13px; }
-        .btn-logout:hover { background: #30363d; }
-
-        /* Thống kê */
-        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
-        .stat-card { background: #161b22; border: 1px solid #30363d; padding: 20px; border-radius: 6px; }
-        .stat-card p { color: #8b949e; font-size: 13px; margin-bottom: 8px; font-weight: 500;}
-        .stat-card h3 { font-size: 24px; font-weight: 600; color: #f0f6fc;}
-        .stat-card.active h3 { color: #3fb950; }
-
-        /* Tabs */
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; border-bottom: 1px solid #30363d; padding-bottom: 10px;}
-        .tab { padding: 6px 12px; background: transparent; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; color: #8b949e; font-weight: 500; }
-        .tab.active { background: #30363d; color: #f0f6fc; }
-
-        /* Thanh công cụ */
-        .actions { display: flex; justify-content: space-between; margin-bottom: 15px; gap: 15px; flex-wrap: wrap; }
-        .actions input { padding: 8px 12px; background: #0d1117; border: 1px solid #30363d; color: #c9d1d9; border-radius: 6px; flex: 1; min-width: 250px; outline: none; font-size: 14px; }
-        .btn-add { padding: 8px 16px; background: #1f6feb; color: #fff; border: 1px solid rgba(240,246,252,0.1); border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 8px; }
-
-        /* Bảng */
-        .table-responsive { border: 1px solid #30363d; border-radius: 6px; overflow-x: auto; background: #161b22; }
-        table { width: 100%; border-collapse: collapse; min-width: 800px; }
-        th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid #30363d; font-size: 14px; }
-        th { color: #8b949e; font-weight: 600; font-size: 13px; }
-        tr:hover { background: #21262d; }
-        .status-green { color: #3fb950; font-size: 13px; font-weight: 500;}
-        .btn-action { padding: 5px 10px; border: 1px solid #30363d; border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 12px; background: transparent; color: #c9d1d9; margin-right: 5px;}
-        .btn-delete { color: #f85149; border-color: rgba(248,81,73,0.4); }
-
-        /* Modal */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(1,4,9,0.8); justify-content: center; align-items: center; z-index: 999;}
+        /* CSS Popup Chọn Link */
+        .link-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 999; justify-content: center; align-items: center; padding: 20px; }
+        .link-modal.active { display: flex; }
+        .link-modal-content { background: #151b2b; border: 1px solid #333; border-radius: 15px; padding: 25px; width: 100%; max-width: 350px; text-align: center; }
+        .link-modal-title { font-family: 'Orbitron', sans-serif; color: #00e5ff; font-size: 18px; margin-bottom: 20px; }
+        .link-choice-btn { display: block; width: 100%; padding: 15px; margin-bottom: 10px; border-radius: 10px; text-decoration: none; font-weight: bold; font-size: 15px; cursor: pointer; transition: 0.2s; border: none; }
+        .btn-main-link { background: #238636; color: #fff; }
+        .btn-sub-link { background: #1f6feb; color: #fff; }
+        .btn-cancel-link { background: transparent; color: #aaa; border: 1px solid #444; margin-top: 10px;}
+        
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 999; justify-content: center; align-items: center; padding: 20px; }
         .modal-overlay.active { display: flex; }
-        .modal-content { background: #161b22; padding: 24px; border-radius: 6px; width: 90%; max-width: 500px; border: 1px solid #30363d; max-height: 90vh; overflow-y: auto;}
-        .modal-content h3 { margin-bottom: 20px; color: #f0f6fc; font-size: 18px; }
-        .modal-content label { font-size: 13px; color: #c9d1d9; margin-bottom: 6px; display: block; font-weight: 500;}
-        .modal-content input, .modal-content select { width: 100%; padding: 8px 12px; margin-bottom: 15px; background: #0d1117; border: 1px solid #30363d; color: #c9d1d9; border-radius: 6px; outline: none; font-size: 14px; }
-        
-        .link-section { background: #0d1117; padding: 15px; border-radius: 6px; border: 1px solid #30363d; margin-bottom: 15px;}
-        .link-section input[type="checkbox"] { width: auto; margin-right: 8px; margin-bottom: 10px; transform: scale(1.2);}
-        .link-section label { display: inline-block; cursor: pointer; }
-        .link-input-group { display: none; margin-top: 10px; }
-
-        .modal-btns { display: flex; gap: 12px; margin-top: 10px; justify-content: flex-end;}
-        .modal-btns button { padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 14px;}
-        .btn-save { background: #238636; color: #fff; border: none; }
-        .btn-cancel { background: transparent; color: #c9d1d9; border: 1px solid #30363d; }
+        .modal-content { background: #111; border: 1px solid #333; border-radius: 20px; padding: 25px; max-width: 350px; width: 100%; text-align: left; }
+        .modal-title { color: #ffd700; font-size: 18px; margin-bottom: 15px; text-align: center; border-bottom: 1px solid #333; padding-bottom: 10px; font-family: 'Orbitron', sans-serif;}
+        .modal-body { font-size: 14px; color: #ccc; line-height: 1.6; }
+        .modal-body ol { padding-left: 20px; } .modal-body li { margin-bottom: 10px; }
+        .highlight { color: #00e5ff; font-weight: bold; }
+        .warning { color: #ff4d4d; font-weight: bold; font-style: italic; display: block; margin-top: 10px; font-size: 13px;}
+        .close-btn { margin-top: 20px; width: 100%; padding: 12px; background: #00e5ff; color: #000; font-weight: bold; border: none; border-radius: 10px; font-size: 14px; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <!-- Form Đăng Nhập -->
-    <div id="login-box">
-        <h2><i class="fa-solid fa-lock"></i> Đăng nhập Admin</h2>
-        <input type="password" id="admin-pass" placeholder="Nhập mật khẩu...">
-        <button onclick="login()">Đăng nhập</button>
-    </div>
-
-    <!-- Giao diện Admin -->
-    <div id="admin-panel">
-        <div class="header">
-            <h1><i class="fa-solid fa-gear"></i> Hệ Thống Quản Trị</h1>
-            <button class="btn-logout" onclick="logout()">Đăng xuất</button>
+    <div class="glass-container">
+        <!-- TRANG CHỦ -->
+        <div id="page-home" class="page">
+            <div class="logo-wrapper"><img src="https://i.ibb.co/0VKpd4C4/file-00000000031081fab71b349b2f53c583.png" alt="SQ MOD"></div>
+            <h1 class="title">SQ MOD VIP</h1>
+            <div class="socials-center">
+                <a href="#" id="link-tg" class="social-btn telegram" target="_blank"><i class="fa-brands fa-telegram"></i></a>
+                <a href="#" id="link-yt" class="social-btn youtube" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+                <a href="#" id="link-tt" class="social-btn tiktok" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
+            </div>
+            <div class="subtitle">CHỌN DANH MỤC BẠN CẦN</div>
+            <a href="javascript:void(0);" onclick="showPage('page-proxy')" class="main-category-btn"><div class="main-category-title"><i class="fa-solid fa-bars"></i> MENU</div><i class="fa-solid fa-chevron-right"></i></a>
+            <a href="javascript:void(0);" onclick="showPage('page-dinhvi')" class="main-category-btn"><div class="main-category-title"><i class="fa-solid fa-location-crosshairs"></i> ĐỊNH VỊ</div><i class="fa-solid fa-chevron-right"></i></a>
+            <a href="javascript:void(0);" onclick="showPage('page-skin')" class="main-category-btn"><div class="main-category-title"><i class="fa-solid fa-shirt"></i> MOD SKIN</div><i class="fa-solid fa-chevron-right"></i></a>
+            <div class="footer-text">SQ MOD VIP - UY TÍN TẠO NÊN THƯƠNG HIỆU</div>
         </div>
 
-        <!-- THỐNG KÊ (Đã thêm Lượt xem) -->
-        <div class="stats">
-            <div class="stat-card">
-                <p>Tổng số Mod</p>
-                <h3 id="stat-total">0</h3>
-            </div>
-            <div class="stat-card">
-                <p>Đang hoạt động</p>
-                <h3 id="stat-active" style="color: #3fb950;">0</h3>
-            </div>
-            <div class="stat-card">
-                <p>Truy cập hôm nay</p>
-                <h3 id="stat-visits-today" style="color: #d29922;">0</h3>
-            </div>
-            <div class="stat-card">
-                <p>Tổng lượt xem</p>
-                <h3 id="stat-visits-total" style="color: #58a6ff;">0</h3>
-            </div>
+        <!-- TRANG CON: MENU -->
+        <div id="page-proxy" class="page">
+            <div class="page-header"><a href="javascript:void(0);" class="back-btn" onclick="showPage('page-home')"><i class="fa-solid fa-arrow-left"></i> Quay lại</a><a href="javascript:void(0);" class="how-to-btn" onclick="openModal('modal-app')">Cách Cài</a></div>
+            <div class="page-title">DANH MỤC MENU</div>
+            <div id="firebase-menu-list"><p style="text-align:center; color:#aaa;">Đang tải...</p></div>
         </div>
 
-        <!-- CẤU HÌNH LINK MẠNG XÃ HỘI -->
-        <div style="background: #161b22; border: 1px solid #30363d; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
-            <h3 style="color: #f0f6fc; font-size: 15px; margin-bottom: 10px;"><i class="fa-solid fa-link"></i> Cấu hình Link Mạng Xã Hội</h3>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <div>
-                    <label style="font-size: 12px;">Link Telegram</label>
-                    <input type="text" id="cfg-telegram" style="width: 100%; padding: 8px; border-radius: 4px; background: #0d1117; border: 1px solid #30363d; color: #fff;">
-                </div>
-                <div>
-                    <label style="font-size: 12px;">Link YouTube</label>
-                    <input type="text" id="cfg-youtube" style="width: 100%; padding: 8px; border-radius: 4px; background: #0d1117; border: 1px solid #30363d; color: #fff;">
-                </div>
-                <div>
-                    <label style="font-size: 12px;">Link TikTok</label>
-                    <input type="text" id="cfg-tiktok" style="width: 100%; padding: 8px; border-radius: 4px; background: #0d1117; border: 1px solid #30363d; color: #fff;">
-                </div>
-                <div style="display: flex; align-items: flex-end;">
-                    <button onclick="saveSettings()" style="width: 100%; padding: 8px; background: #1f6feb; color: #fff; border: none; border-radius: 4px; cursor: pointer;">Lưu Link</button>
-                </div>
-            </div>
+        <!-- TRANG CON: ĐỊNH VỊ -->
+        <div id="page-dinhvi" class="page">
+            <div class="page-header"><a href="javascript:void(0);" class="back-btn" onclick="showPage('page-home')"><i class="fa-solid fa-arrow-left"></i> Quay lại</a><a href="javascript:void(0);" class="how-to-btn" onclick="openModal('modal-file')">Cách Cài</a></div>
+            <div class="page-title">DANH MỤC ĐỊNH VỊ</div>
+            <div id="firebase-dinhvi-list"><p style="text-align:center; color:#aaa;">Đang tải...</p></div>
         </div>
 
-        <div class="tabs">
-            <div class="tab active" onclick="filterTable('all', this)">Tất cả</div>
-            <div class="tab" onclick="filterTable('page-proxy', this)">Menu</div>
-            <div class="tab" onclick="filterTable('page-dinhvi', this)">Định Vị</div>
-            <div class="tab" onclick="filterTable('page-skin', this)">Mod Skin</div>
-        </div>
-
-        <div class="actions">
-            <input type="text" id="search-input" placeholder="Tìm kiếm..." onkeyup="searchTable()">
-            <button class="btn-add" onclick="openModal('add')"><i class="fa-solid fa-plus"></i> Thêm Mod</button>
-        </div>
-
-        <div class="table-responsive">
-            <table>
-                <thead>
-                    <tr>
-                        <th>ẢNH</th>
-                        <th>TÊN MOD</th>
-                        <th>DANH MỤC</th>
-                        <th>LOẠI LINK</th>
-                        <th>THAO TÁC</th>
-                    </tr>
-                </thead>
-                <tbody id="table-body"></tbody>
-            </table>
+        <!-- TRANG CON: MOD SKIN -->
+        <div id="page-skin" class="page">
+            <div class="page-header"><a href="javascript:void(0);" class="back-btn" onclick="showPage('page-home')"><i class="fa-solid fa-arrow-left"></i> Quay lại</a><a href="javascript:void(0);" class="how-to-btn" onclick="openModal('modal-file')">Cách Cài</a></div>
+            <div class="page-title">DANH MỤC MOD SKIN</div>
+            <div id="firebase-skin-list"><p style="text-align:center; color:#aaa;">Đang tải...</p></div>
         </div>
     </div>
 
-    <!-- Modal Thêm/Sửa -->
-    <div class="modal-overlay" id="modal-form">
+    <!-- POPUP CHỌN LINK -->
+    <div class="link-modal" id="link-choice-modal">
+        <div class="link-modal-content">
+            <div class="link-modal-title">CHỌN LINK TẢI XUỐNG</div>
+            <a href="#" id="btn-choice-main" class="link-choice-btn btn-main-link" target="_blank">TẢI LINK CHÍNH (Link 1)</a>
+            <a href="#" id="btn-choice-sub" class="link-choice-btn btn-sub-link" target="_blank">TẢI LINK PHỤ (Link 2)</a>
+            <button class="link-choice-btn btn-cancel-link" onclick="closeLinkModal()">HỦY</button>
+        </div>
+    </div>
+
+    <!-- POPUP HƯỚNG DẪN -->
+    <div class="modal-overlay" id="modal-app">
         <div class="modal-content">
-            <h3 id="modal-title">Thêm Mod Mới</h3>
-            <input type="hidden" id="mod-id">
-            
-            <label>Tên Mod</label>
-            <input type="text" id="mod-name" placeholder="VD: BÁO HỒNG">
-            
-            <label>Danh mục</label>
-            <select id="mod-category">
-                <option value="page-proxy">MENU</option>
-                <option value="page-dinhvi">ĐỊNH VỊ</option>
-                <option value="page-skin">MOD SKIN</option>
-            </select>
-
-            <label>Link Ảnh</label>
-            <input type="text" id="mod-img" placeholder="https://...">
-            
-            <!-- PHẦN CHỌN LINK CHÍNH / PHỤ -->
-            <div class="link-section">
-                <div>
-                    <input type="checkbox" id="check-main" onchange="toggleLinkInput('main')">
-                    <label for="check-main">Có Link Chính (Link 1)</label>
-                    <div class="link-input-group" id="group-main">
-                        <input type="text" id="mod-link-main" placeholder="Nhập Link Chính...">
-                    </div>
-                </div>
-                <div>
-                    <input type="checkbox" id="check-sub" onchange="toggleLinkInput('sub')">
-                    <label for="check-sub">Có Link Phụ (Link 2)</label>
-                    <div class="link-input-group" id="group-sub">
-                        <input type="text" id="mod-link-sub" placeholder="Nhập Link Phụ...">
-                    </div>
-                </div>
-            </div>
-            
-            <div class="modal-btns">
-                <button class="btn-cancel" onclick="closeModal()">Hủy</button>
-                <button class="btn-save" onclick="saveMod()">Lưu Dữ Liệu</button>
-            </div>
+            <div class="modal-title">HƯỚNG DẪN CÀI APP</div>
+            <div class="modal-body"><ol><li>Tải file APK về máy.</li><li>Mở file, bấm <span class="highlight">Cài đặt</span>.</li><li>Nếu báo chặn nguồn, chọn <span class="highlight">Vẫn cài đặt</span>.</li><li>Cấp quyền <span class="highlight">Hiển thị trên ứng dụng khác</span>.</li><li>Vào game bật Menu lên!</li></ol></div>
+            <button class="close-btn" onclick="closeModal('modal-app')">ĐÃ HIỂU</button>
+        </div>
+    </div>
+    <div class="modal-overlay" id="modal-file">
+        <div class="modal-content">
+            <div class="modal-title">HƯỚNG DẪN CHÉP FILE</div>
+            <div class="modal-body"><ol><li><b>Tải File</b> trên web.</li><li>Mở <b>ZArchiver</b>.</li><li>Tìm file vừa tải (thường ở Download).</li><li>Nhấn giữ file, chọn <span class="highlight">Copy</span>.</li><li>Vào <span class="highlight">Android/data/com.dts.freefireth/files/</span> chọn <span class="highlight">Paste</span>.</li><li>Vào Game Test!</li></ol><span class="warning">* Dùng đúng Free Fire hoặc FF Max!</span></div>
+            <button class="close-btn" onclick="closeModal('modal-file')">ĐÃ HIỂU</button>
         </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, getDoc, setDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    <script>
+        function showPage(pageId) {
+            let pages = document.querySelectorAll('.page');
+            pages.forEach(page => { page.style.display = 'none'; });
+            let selectedPage = document.getElementById(pageId);
+            if (selectedPage) { selectedPage.style.display = 'block'; }
+        }
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyBA6LXphLTRJw-cKECEPNAzODAkHB3oKHI",
-            authDomain: "sq-mod-key.firebaseapp.com",
-            projectId: "sq-mod-key",
-            storageBucket: "sq-mod-key.firebasestorage.app",
-            messagingSenderId: "1027007715479",
-            appId: "1:1027007715479:web:e341f8f70978f2058e71d2",
-            measurementId: "G-2J4WVTPM8C"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        function openModal(modalId) { let modal = document.getElementById(modalId); if(modal) modal.classList.add('active'); }
+        function closeModal(modalId) { let modal = document.getElementById(modalId); if(modal) modal.classList.remove('active'); }
         
-        window.db = db;
-        window.fbTools = { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, getDoc, setDoc, increment };
+        function closeLinkModal() { document.getElementById('link-choice-modal').classList.remove('active'); }
 
-        const ADMIN_PASS = "SỸ QUYỀN K11"; 
-        let allMods = [];
-
-        window.login = function() {
-            let pass = document.getElementById('admin-pass').value;
-            if (pass === ADMIN_PASS) {
-                document.getElementById('login-box').style.display = 'none';
-                document.getElementById('admin-panel').style.display = 'block';
-                loadData();
-                loadSettings();
-                loadStats();
+        // Logic xử lý khi bấm vào File Mod
+        window.handleDownload = function(link_main, link_sub) {
+            if (link_main && link_sub) {
+                // Nếu có cả 2 link, hiện bảng chọn
+                document.getElementById('btn-choice-main').href = link_main;
+                document.getElementById('btn-choice-sub').href = link_sub;
+                document.getElementById('link-choice-modal').classList.add('active');
+            } else if (link_main) {
+                window.open(link_main, '_blank');
+            } else if (link_sub) {
+                window.open(link_sub, '_blank');
             } else {
-                alert("Sai mật khẩu!");
+                alert("File này đang cập nhật!");
             }
         }
 
-        window.logout = function() { location.reload(); }
-
-        // --- CHỨC NĂNG 1: CẤU HÌNH LINK MẠNG XÃ HỘI ---
-        async function loadSettings() {
-            const { doc, getDoc } = window.fbTools;
+        // --- TẢI CẤU HÌNH LINK MẠNG XÃ HỘI & LƯỢT XEM ---
+        async function loadSettingsAndStats() {
+            const { doc, getDoc, updateDoc, increment } = window.fbTools;
             try {
-                const docSnap = await getDoc(doc(db, "settings", "socials"));
+                // Tải link mạng xã hội
+                const docSnap = await getDoc(doc(window.db, "settings", "socials"));
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-                    document.getElementById('cfg-telegram').value = data.telegram || "";
-                    document.getElementById('cfg-youtube').value = data.youtube || "";
-                    document.getElementById('cfg-tiktok').value = data.tiktok || "";
+                    if(data.telegram) document.getElementById('link-tg').href = data.telegram;
+                    if(data.youtube) document.getElementById('link-yt').href = data.youtube;
+                    if(data.tiktok) document.getElementById('link-tt').href = data.tiktok;
                 }
-            } catch(e) { console.log(e); }
+
+                // Cập nhật lượt xem (tăng 1 mỗi lần load trang)
+                const statsRef = doc(window.db, "settings", "visits");
+                await updateDoc(statsRef, { total: increment(1) });
+
+            } catch(e) { console.log("Lỗi settings/stats: ", e); }
         }
 
-        window.saveSettings = async function() {
-            const { doc, setDoc } = window.fbTools;
-            const telegram = document.getElementById('cfg-telegram').value;
-            const youtube = document.getElementById('cfg-youtube').value;
-            const tiktok = document.getElementById('cfg-tiktok').value;
-
-            try {
-                await setDoc(doc(db, "settings", "socials"), { telegram, youtube, tiktok });
-                alert("Đã lưu cấu hình link mạng xã hội!");
-            } catch (e) {
-                alert("Lỗi: " + e.message);
-            }
-        }
-
-        // --- CHỨC NĂNG 2: THỐNG KÊ LƯỢT XEM ---
-        async function loadStats() {
-            const { doc, getDoc, updateDoc, increment, setDoc } = window.fbTools;
-            try {
-                const statsRef = doc(db, "settings", "visits");
-                const docSnap = await getDoc(statsRef);
-                
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    document.getElementById('stat-visits-total').innerText = data.total || 0;
-                    // Giả lập lượt xem hôm nay (vì đếm theo ngày cần code backend phức tạp)
-                    document.getElementById('stat-visits-today').innerText = Math.floor(Math.random() * 50) + 10; 
-                } else {
-                    await setDoc(statsRef, { total: 0 });
-                }
-            } catch(e) { console.log(e); }
-        }
-
-        // --- TẢI DỮ LIỆU MOD ---
-        async function loadData() {
+        // --- TẢI DỮ LIỆU MOD TỪ FIREBASE ---
+        async function loadModsFromFirebase() {
+            if (!window.db) return; 
             const { collection, getDocs } = window.fbTools;
+            
             try {
-                const querySnapshot = await getDocs(collection(db, "mods"));
-                allMods = [];
+                const querySnapshot = await getDocs(collection(window.db, "mods"));
+                const listMenu = document.getElementById('firebase-menu-list');
+                const listDinhVi = document.getElementById('firebase-dinhvi-list');
+                const listSkin = document.getElementById('firebase-skin-list');
+                
+                listMenu.innerHTML = ''; listDinhVi.innerHTML = ''; listSkin.innerHTML = '';
+
+                if (querySnapshot.empty) {
+                    listMenu.innerHTML = '<p style="text-align:center; color:#aaa;">Đang cập nhật...</p>';
+                    listDinhVi.innerHTML = '<p style="text-align:center; color:#aaa;">Đang cập nhật...</p>';
+                    listSkin.innerHTML = '<p style="text-align:center; color:#aaa;">Đang cập nhật...</p>';
+                    return;
+                }
+
                 querySnapshot.forEach((doc) => {
-                    allMods.push({ id: doc.id, ...doc.data() });
+                    const data = doc.data();
+                    
+                    // Chuyển link sang dạng an toàn để truyền vào hàm
+                    const lMain = data.link_main ? `'${data.link_main}'` : 'null';
+                    const lSub = data.link_sub ? `'${data.link_sub}'` : 'null';
+
+                    const itemHTML = `
+                        <div class="item-card" onclick="handleDownload(${lMain}, ${lSub})">
+                            <span class="badge-ffth">FFTH</span>
+                            <img src="${data.img}" onerror="this.src='https://i.ibb.co/0VKpd4C4/file-00000000031081fab71b349b2f53c583.png'" class="item-img" alt="${data.name}">
+                            <div class="item-info">
+                                <div class="item-title">${data.name}</div>
+                                <div class="item-desc">Bấm để tải xuống</div>
+                            </div>
+                        </div>
+                    `;
+
+                    if(data.category === 'page-proxy') { listMenu.insertAdjacentHTML('beforeend', itemHTML); } 
+                    else if(data.category === 'page-dinhvi') { listDinhVi.insertAdjacentHTML('beforeend', itemHTML); } 
+                    else { listSkin.insertAdjacentHTML('beforeend', itemHTML); }
                 });
-                renderTable();
-                document.getElementById('stat-total').innerText = allMods.length;
-                document.getElementById('stat-active').innerText = allMods.length;
-            } catch (e) { console.error("Lỗi: ", e); }
+            } catch (error) { console.error("Lỗi tải dữ liệu: ", error); }
         }
 
-        window.filterTable = function(category, tabElement) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            if(tabElement) tabElement.classList.add('active');
-            if(category === 'all') renderTable(allMods);
-            else renderTable(allMods.filter(m => m.category === category));
-        }
-
-        window.searchTable = function() {
-            const text = document.getElementById('search-input').value.toLowerCase();
-            renderTable(allMods.filter(m => m.name.toLowerCase().includes(text)));
-        }
-
-        function renderTable(dataToRender = allMods) {
-            const tbody = document.getElementById('table-body');
-            tbody.innerHTML = '';
-            
-            dataToRender.forEach(mod => {
-                let catName = mod.category === 'page-proxy' ? 'MENU' : (mod.category === 'page-dinhvi' ? 'ĐỊNH VỊ' : 'MOD SKIN');
-                let linkType = "";
-                if(mod.link_main && mod.link_sub) linkType = "Cả 2";
-                else if(mod.link_main) linkType = "Link Chính";
-                else if(mod.link_sub) linkType = "Link Phụ";
-                else linkType = "Chưa có";
-
-                let tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><img src="${mod.img}" width="40" height="40" style="border-radius: 6px; object-fit: cover; border: 1px solid #30363d;" onerror="this.src='https://i.ibb.co/0VKpd4C4/file-00000000031081fab71b349b2f53c583.png'"></td>
-                    <td><b style="color:#f0f6fc;">${mod.name}</b></td>
-                    <td><span style="color:#8b949e;">${catName}</span></td>
-                    <td><span style="color:#d29922;">${linkType}</span></td>
-                    <td>
-                        <button class="btn-action" onclick="editMod('${mod.id}')">Sửa</button>
-                        <button class="btn-action btn-delete" onclick="deleteMod('${mod.id}')">Xóa</button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        window.toggleLinkInput = function(type) {
-            if(type === 'main') {
-                document.getElementById('group-main').style.display = document.getElementById('check-main').checked ? 'block' : 'none';
-            } else {
-                document.getElementById('group-sub').style.display = document.getElementById('check-sub').checked ? 'block' : 'none';
-            }
-        }
-
-        window.openModal = function(type) {
-            document.getElementById('modal-form').classList.add('active');
-            if(type === 'add') {
-                document.getElementById('modal-title').innerText = "Thêm Mod Mới";
-                document.getElementById('mod-id').value = "";
-                document.getElementById('mod-name').value = "";
-                document.getElementById('mod-img').value = "";
-                document.getElementById('mod-link-main').value = "";
-                document.getElementById('mod-link-sub').value = "";
-                document.getElementById('check-main').checked = false;
-                document.getElementById('check-sub').checked = false;
-                toggleLinkInput('main');
-                toggleLinkInput('sub');
-            }
-        }
-
-        window.closeModal = function() { document.getElementById('modal-form').classList.remove('active'); }
-
-        window.editMod = function(id) {
-            const mod = allMods.find(m => m.id === id);
-            if(!mod) return;
-            
-            document.getElementById('modal-form').classList.add('active');
-            document.getElementById('modal-title').innerText = "Sửa Mod";
-            document.getElementById('mod-id').value = mod.id;
-            document.getElementById('mod-name').value = mod.name;
-            document.getElementById('mod-category').value = mod.category;
-            document.getElementById('mod-img').value = mod.img;
-            
-            // Xử lý link chính/p
+        setTimeout(() => {
+            loadSettingsAndStats();
+            loadModsFromFirebase();
+        }, 1000);
+    </script>
+</body>
+        </html>
