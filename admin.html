@@ -188,8 +188,14 @@
                 <option value="page-skin">MOD SKIN</option>
             </select>
 
-            <label>Link Ảnh</label>
-            <input type="text" id="mod-img" placeholder="https://...">
+            <label>Ảnh Mod</label>
+            <div style="background:#0d1117; border:1px solid #30363d; border-radius:6px; padding:12px; margin-bottom:15px;">
+                <input type="file" id="mod-img-file" accept="image/*" style="width:100%; color:#c9d1d9; margin-bottom:10px;">
+                <div id="img-upload-status" style="font-size:12px; color:#8b949e; margin-bottom:8px;"></div>
+                <img id="mod-img-preview" src="" style="display:none; max-width:100%; max-height:140px; border-radius:8px; margin-bottom:10px; border:1px solid #30363d; object-fit:cover;">
+                <label style="font-size:12px; color:#8b949e; margin-bottom:4px;">Hoặc dán link ảnh trực tiếp (nếu không chọn ảnh ở trên):</label>
+                <input type="text" id="mod-img" placeholder="https://...">
+            </div>
 
             <div class="link-section">
                 <div>
@@ -232,6 +238,19 @@
             }, 3000);
         };
 
+        window.addEventListener('error', function(e) {
+            console.error("Lỗi toàn cục: ", e.message, "tại", e.filename, ":", e.lineno);
+            if (window.showToast) {
+                window.showToast("❌ Lỗi hệ thống: " + e.message, "error");
+            }
+        });
+        window.addEventListener('unhandledrejection', function(e) {
+            console.error("Lỗi Promise chưa xử lý: ", e.reason);
+            if (window.showToast) {
+                window.showToast("❌ Lỗi kết nối: " + (e.reason && e.reason.message ? e.reason.message : e.reason), "error");
+            }
+        });
+
         const ADMIN_PASS = "SỸ QUYỀN K11";
 
         document.getElementById('btn-login').onclick = function() {
@@ -262,6 +281,9 @@
             document.getElementById('mod-id').value = "";
             document.getElementById('mod-name').value = "";
             document.getElementById('mod-img').value = "";
+            document.getElementById('mod-img-file').value = "";
+            document.getElementById('mod-img-preview').style.display = 'none';
+            document.getElementById('img-upload-status').innerText = "";
             document.getElementById('mod-link-main').value = "";
             document.getElementById('mod-link-sub').value = "";
             document.getElementById('check-main').checked = false;
@@ -273,6 +295,14 @@
         document.getElementById('btn-close-modal').onclick = function() {
             document.getElementById('modal-form').classList.remove('active');
         };
+
+        document.getElementById('mod-img-file').addEventListener('change', async function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            if (window.uploadModImage) {
+                await window.uploadModImage(file);
+            }
+        });
 
         document.getElementById('check-main').onchange = function() {
             document.getElementById('group-main').style.display = this.checked ? 'block' : 'none';
@@ -292,13 +322,35 @@
         document.getElementById('btn-save-cfg').onclick = function() {
             if(window.saveSettingsData) window.saveSettingsData();
         };
+
+        function waitUntil(conditionFn, maxWaitMs, intervalMs) {
+            return new Promise((resolve) => {
+                const start = Date.now();
+                const check = () => {
+                    if (conditionFn()) { resolve(true); return; }
+                    if (Date.now() - start >= maxWaitMs) { resolve(false); return; }
+                    setTimeout(check, intervalMs);
+                };
+                check();
+            });
+        }
+
         document.getElementById('btn-save-modal').onclick = async function() {
-            if (!window.saveModData) {
-                showToast("Hệ thống chưa sẵn sàng, vui lòng đợi vài giây rồi thử lại!", "error");
-                return;
-            }
             const btn = this;
             const oldText = btn.innerText;
+
+            if (!window.saveModData) {
+                btn.disabled = true;
+                btn.innerText = "Đang kết nối...";
+                const ready = await waitUntil(() => !!window.saveModData, 8000, 300);
+                btn.disabled = false;
+                btn.innerText = oldText;
+                if (!ready) {
+                    window.showToast("❌ Không kết nối được hệ thống sau 8 giây. Vui lòng tải lại trang và kiểm tra mạng!", "error");
+                    return;
+                }
+            }
+
             btn.disabled = true;
             btn.innerText = "Đang lưu...";
             try {
@@ -324,71 +376,4 @@
             getFirestore, collection, addDoc, getDocs, deleteDoc,
             doc, updateDoc, getDoc, setDoc
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyBA6LXphLTRJw-cKECEPNAzODAkHB3oKHI",
-            authDomain: "sq-mod-key.firebaseapp.com",
-            projectId: "sq-mod-key",
-            storageBucket: "sq-mod-key.firebasestorage.app",
-            messagingSenderId: "1027007715479",
-            appId: "1:1027007715479:web:e341f8f70978f2058e71d2",
-            measurementId: "G-2J4WVTPM8C"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        let allMods = [];
-        let currentCategory = 'all';
-        let statsRefreshTimer = null;
-
-        function getTodayStr() {
-            const d = new Date();
-            const y = d.getFullYear();
-            const m = String(d.getMonth() + 1).padStart(2, '0');
-            const day = String(d.getDate()).padStart(2, '0');
-            return `${y}-${m}-${day}`;
-        }
-
-        window.initAdminData = function() {
-            loadSettings();
-            loadStats();
-            loadData();
-            loadOnlineCount();
-            loadTodayVisits();
-
-            if (statsRefreshTimer) clearInterval(statsRefreshTimer);
-            statsRefreshTimer = setInterval(() => {
-                loadOnlineCount();
-                loadTodayVisits();
-            }, 20000);
-        }
-
-        async function loadOnlineCount() {
-            try {
-                const snap = await getDocs(collection(db, "presence"));
-                const now = Date.now();
-                let onlineCount = 0;
-                snap.forEach((d) => {
-                    const data = d.data();
-                    if (data.lastSeen && (now - data.lastSeen) < 45000) {
-                        onlineCount++;
-                    }
-                });
-                document.getElementById('stat-online').innerText = onlineCount;
-            } catch (e) { console.log("Lỗi tải người online: ", e); }
-        }
-
-        async function loadTodayVisits() {
-            try {
-                const docSnap = await getDoc(doc(db, "visits_daily", getTodayStr()));
-                document.getElementById('stat-visits-today').innerText = docSnap.exists() ? (docSnap.data().count || 0) : 0;
-            } catch (e) { console.log("Lỗi tải lượt truy cập hôm nay: ", e); }
-        }
-
-        async function loadSettings() {
-            try {
-                const docSnap = await getDoc(doc(db, "settings", "socials"));
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    document.getElementById('cfg-telegram').value = data.telegram || "";
-                    document.getElementById('cfg-youtube').value =
+        import {
