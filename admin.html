@@ -152,6 +152,7 @@
 
         <div class="actions">
             <input type="text" id="search-input" placeholder="Tìm kiếm...">
+            <button id="btn-delete-all" class="btn-add" style="background:#da3633;"><i class="fa-solid fa-trash"></i> Xóa Tất Cả</button>
             <button id="btn-open-add-modal" class="btn-add"><i class="fa-solid fa-plus"></i> Thêm Mod</button>
         </div>
 
@@ -286,6 +287,10 @@
             if(window.saveModData) window.saveModData();
         };
 
+        document.getElementById('btn-delete-all').onclick = function() {
+            if(window.deleteAllMods) window.deleteAllMods();
+        };
+
         // Tìm kiếm realtime
         document.getElementById('search-input').addEventListener('input', function() {
             if (window.applyFilters) window.applyFilters();
@@ -331,7 +336,6 @@
             loadOnlineCount();
             loadTodayVisits();
 
-            // Tự làm mới "Người online" và "Lượt truy cập hôm nay" mỗi 20 giây
             if (statsRefreshTimer) clearInterval(statsRefreshTimer);
             statsRefreshTimer = setInterval(() => {
                 loadOnlineCount();
@@ -339,7 +343,6 @@
             }, 20000);
         }
 
-        // Đếm số người có "nhịp tim" (presence) trong 45 giây gần nhất => coi là đang online
         async function loadOnlineCount() {
             try {
                 const snap = await getDocs(collection(db, "presence"));
@@ -355,7 +358,6 @@
             } catch (e) { console.log("Lỗi tải người online: ", e); }
         }
 
-        // Lượt truy cập hôm nay (đọc từ visits_daily/{YYYY-MM-DD})
         async function loadTodayVisits() {
             try {
                 const docSnap = await getDoc(doc(db, "visits_daily", getTodayStr()));
@@ -363,7 +365,6 @@
             } catch (e) { console.log("Lỗi tải lượt truy cập hôm nay: ", e); }
         }
 
-        // Tải cấu hình mạng xã hội
         async function loadSettings() {
             try {
                 const docSnap = await getDoc(doc(db, "settings", "socials"));
@@ -387,7 +388,6 @@
             } catch (e) { alert("Lỗi: " + e.message); }
         }
 
-        // Tải lượt xem
         async function loadStats() {
             try {
                 const docSnap = await getDoc(doc(db, "settings", "visits"));
@@ -397,9 +397,9 @@
             } catch(e) { console.log(e); }
         }
 
-        // Tải danh sách Mod
         async function loadData() {
             const tbody = document.getElementById('table-body');
             try {
                 const querySnapshot = await getDocs(collection(db, "mods"));
-              
+                allMods = [];
+                querySnapshot.f
