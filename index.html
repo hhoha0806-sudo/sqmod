@@ -6,10 +6,13 @@
     <title>SQ MOD VIP - Danh Mục</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
+    <!-- KẾT NỐI FIREBASE -->
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-      import { getFirestore, collection, getDocs, doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+      import {
+        getFirestore, collection, getDocs, doc, getDoc, setDoc, updateDoc, increment
+      } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
       const firebaseConfig = {
         apiKey: "AIzaSyBA6LXphLTRJw-cKECEPNAzODAkHB3oKHI",
@@ -24,148 +27,156 @@
       const app = initializeApp(firebaseConfig);
       const db = getFirestore(app);
       window.db = db;
-      window.fbTools = { collection, getDocs, doc, getDoc, updateDoc, increment };
+      window.fbTools = { collection, getDocs, doc, getDoc, setDoc, updateDoc, increment };
     </script>
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-image: url('https://i.ibb.co/0VKpd4C4/file-00000000031081fab71b349b2f53c583.png'); 
-            background-size: cover; 
-            background-position: center; 
-            background-attachment: fixed; 
-            min-height: 100vh; 
-            display: flex; 
-            justify-content: center; 
-            align-items: flex-start; 
-            padding: 40px 20px; 
-            color: #fff; 
-            /* Chỉ ẩn thanh cuộn ngang, vẫn cho phép cuộn dọc */
-            overflow-x: hidden; 
+
+        html, body {
+            height: 100%;
         }
-        
-        body::before { 
-            content: ''; 
-            position: fixed; 
-            top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0, 0, 0, 0.5); 
-            z-index: -1; 
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-image: url('https://i.ibb.co/0VKpd4C4/file-00000000031081fab71b349b2f53c583.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            height: 100vh;
+            height: 100dvh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 40px 20px;
+            color: #fff;
+            overflow: hidden;
+            overscroll-behavior: none;
+            touch-action: none;
         }
-        
-        .glass-container { 
-            width: 100%; 
-            max-width: 400px; 
-            background: rgba(15, 15, 20, 0.85); 
-            border: 1px solid rgba(255, 255, 255, 0.15); 
-            border-radius: 30px; 
-            padding: 30px 20px; 
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5); 
-            text-align: center; 
-            position: relative; 
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: -1;
         }
-        
-        .logo-wrapper { 
-            position: relative; 
-            width: 110px; height: 110px; 
-            margin: 0 auto 15px; 
-            border-radius: 50%; 
-            padding: 3px; 
-            background: linear-gradient(135deg, #00e5ff, #0055ff, #00e5ff); 
-            box-shadow: 0 0 20px rgba(0, 229, 255, 0.5); 
+
+        .glass-container {
+            width: 100%;
+            max-width: 400px;
+            max-height: 100%;
+            background: rgba(15, 15, 20, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 30px;
+            padding: 30px 20px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            text-align: center;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .logo-wrapper {
+            position: relative;
+            width: 110px; height: 110px;
+            margin: 0 auto 15px;
+            border-radius: 50%;
+            padding: 3px;
+            background: linear-gradient(135deg, #00e5ff, #0055ff, #00e5ff);
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
         }
         .logo-wrapper img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid #111;}
-        
-        .title { 
-            font-family: 'Orbitron', sans-serif; 
-            font-size: 26px; font-weight: 900; 
-            color: #ffd700; 
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5); 
-            margin-bottom: 10px; 
-            letter-spacing: 1px; 
+
+        .title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 26px; font-weight: 900;
+            color: #ffd700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            margin-bottom: 10px;
+            letter-spacing: 1px;
         }
-        
+
         .socials-center { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; }
-        .social-btn { 
-            width: 45px; height: 45px; 
-            border-radius: 14px; 
-            background: rgba(255, 255, 255, 0.05); 
-            border: 1px solid rgba(255, 255, 255, 0.1); 
-            display: flex; justify-content: center; align-items: center; 
-            font-size: 20px; text-decoration: none; transition: 0.3s; 
+        .social-btn {
+            width: 45px; height: 45px; border-radius: 14px;
+            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex; justify-content: center; align-items: center;
+            font-size: 20px; text-decoration: none; transition: 0.3s;
         }
-        .social-btn.telegram { color: #0088cc; } .social-btn.youtube { color: #ff0000; } .social-btn.tiktok { color: #00f2fe; }
+        .social-btn.telegram { color: #0088cc; }
+        .social-btn.youtube { color: #ff0000; }
+        .social-btn.tiktok { color: #00f2fe; }
         .social-btn:hover { background: rgba(255, 255, 255, 0.15); }
-        
+
         .subtitle { font-size: 13px; color: #00e5ff; margin-bottom: 30px; letter-spacing: 1px; text-transform: uppercase; }
-        
-        .page { display: none; } 
-        #page-home { display: block; } 
-        
-        .main-category-btn { 
-            display: flex; align-items: center; justify-content: space-between; 
-            background: rgba(255, 255, 255, 0.03); 
-            border: 1px solid rgba(255, 255, 255, 0.1); 
-            border-radius: 18px; 
-            padding: 20px 25px; 
-            margin-bottom: 15px; 
-            cursor: pointer; 
-            transition: 0.3s; 
-            text-decoration: none; 
-            color: #fff; 
-            /* Chỉ chặn bôi đen chữ trên nút, không chặn vuốt trang */
-            user-select: none; 
-            -webkit-user-select: none; 
+
+        .page { display: none; flex-direction: column; flex: 1; min-height: 0; }
+        #page-home {
+            display: flex;
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            touch-action: pan-y;
+        }
+
+        .main-category-btn {
+            display: flex; align-items: center; justify-content: space-between;
+            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 18px; padding: 20px 25px; margin-bottom: 15px;
+            cursor: pointer; transition: 0.3s; text-decoration: none; color: #fff;
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
         }
         .main-category-btn:active, .main-category-btn:hover { background: rgba(0, 229, 255, 0.1); border-color: #00e5ff; }
         .main-category-title { font-family: 'Orbitron', sans-serif; font-size: 18px; font-weight: 700; color: #00e5ff; display: flex; align-items: center; gap: 10px; }
         .main-category-btn .fa-chevron-right { color: #aaa; font-size: 16px; }
-        
-        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .back-btn, .how-to-btn { 
-            display: inline-flex; align-items: center; 
-            background: rgba(255, 255, 255, 0.1); 
-            border: 1px solid rgba(255,255,255,0.2); 
-            padding: 8px 15px; 
-            border-radius: 10px; 
-            color: #fff; 
-            font-weight: bold; 
-            font-size: 12px; 
-            cursor: pointer; 
-            text-decoration: none; 
-            text-transform: uppercase; 
+
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-shrink: 0; }
+        .back-btn, .how-to-btn {
+            display: inline-flex; align-items: center;
+            background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255,255,255,0.2);
+            padding: 8px 15px; border-radius: 10px; color: #fff; font-weight: bold; font-size: 12px;
+            cursor: pointer; text-decoration: none; text-transform: uppercase;
+            touch-action: manipulation;
         }
-        .back-btn i { margin-right: 8px; } 
+        .back-btn i { margin-right: 8px; }
         .how-to-btn { color: #ffd700; border-color: rgba(255, 215, 0, 0.4); }
-        
-        .page-title { font-family: 'Orbitron', sans-serif; font-size: 20px; color: #00e5ff; margin-bottom: 20px; text-align: left; }
-        
-        .item-card { 
-            display: flex; 
-            align-items: center; 
-            background: rgba(255, 255, 255, 0.03); 
-            border: 1px solid rgba(255, 255, 255, 0.1); 
-            border-radius: 20px; 
-            padding: 12px; 
-            margin-bottom: 15px; 
-            text-decoration: none; 
-            color: #fff; 
-            text-align: left; 
-            position: relative; 
-            cursor: pointer; 
+
+        .page-title { font-family: 'Orbitron', sans-serif; font-size: 20px; color: #00e5ff; margin-bottom: 20px; text-align: left; flex-shrink: 0; }
+
+        #firebase-menu-list, #firebase-dinhvi-list, #firebase-skin-list {
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+            touch-action: pan-y;
+            padding-right: 4px;
+        }
+
+        .item-card {
+            display: flex; align-items: center;
+            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px; padding: 12px; margin-bottom: 15px;
+            text-decoration: none; color: #fff; text-align: left; position: relative;
+            touch-action: manipulation;
+            cursor: pointer;
         }
         .item-card:hover { background: rgba(255, 255, 255, 0.08); }
-        
+
         .item-img { width: 90px; height: 90px; border-radius: 14px; object-fit: cover; border: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; background: #000; }
+
         .item-info { margin-left: 15px; flex: 1; overflow: hidden; }
         .item-title { font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: 800; color: #00fa9a; line-height: 1.2; margin-bottom: 5px; text-transform: uppercase; }
         .item-desc { font-size: 12px; color: #aaa; }
-        
+
         .badge-ffth { position: absolute; top: 0; left: 0; background: #ff0033; color: #fff; font-size: 11px; font-weight: 900; padding: 4px 10px; border-radius: 20px 0 15px 0; z-index: 10; }
-        
+
         .footer-text { font-size: 11px; color: #777; margin-top: 25px; text-transform: uppercase; }
-        
+
         .link-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 999; justify-content: center; align-items: center; padding: 20px; }
         .link-modal.active { display: flex; }
         .link-modal-content { background: #151b2b; border: 1px solid #333; border-radius: 15px; padding: 25px; width: 100%; max-width: 350px; text-align: center; }
@@ -174,13 +185,14 @@
         .btn-main-link { background: #238636; color: #fff; }
         .btn-sub-link { background: #1f6feb; color: #fff; }
         .btn-cancel-link { background: transparent; color: #aaa; border: 1px solid #444; margin-top: 10px;}
-        
+
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 999; justify-content: center; align-items: center; padding: 20px; }
         .modal-overlay.active { display: flex; }
         .modal-content { background: #111; border: 1px solid #333; border-radius: 20px; padding: 25px; max-width: 350px; width: 100%; text-align: left; }
         .modal-title { color: #ffd700; font-size: 18px; margin-bottom: 15px; text-align: center; border-bottom: 1px solid #333; padding-bottom: 10px; font-family: 'Orbitron', sans-serif;}
         .modal-body { font-size: 14px; color: #ccc; line-height: 1.6; }
-        .modal-body ol { padding-left: 20px; } .modal-body li { margin-bottom: 10px; }
+        .modal-body ol { padding-left: 20px; }
+        .modal-body li { margin-bottom: 10px; }
         .highlight { color: #00e5ff; font-weight: bold; }
         .warning { color: #ff4d4d; font-weight: bold; font-style: italic; display: block; margin-top: 10px; font-size: 13px;}
         .close-btn { margin-top: 20px; width: 100%; padding: 12px; background: #00e5ff; color: #000; font-weight: bold; border: none; border-radius: 10px; font-size: 14px; cursor: pointer; }
@@ -189,6 +201,7 @@
 <body>
 
     <div class="glass-container">
+        <!-- TRANG CHỦ -->
         <div id="page-home" class="page">
             <div class="logo-wrapper"><img src="https://i.ibb.co/0VKpd4C4/file-00000000031081fab71b349b2f53c583.png" alt="SQ MOD"></div>
             <h1 class="title">SQ MOD VIP</h1>
@@ -204,18 +217,21 @@
             <div class="footer-text">SQ MOD VIP - UY TÍN TẠO NÊN THƯƠNG HIỆU</div>
         </div>
 
+        <!-- TRANG CON: MENU -->
         <div id="page-proxy" class="page">
             <div class="page-header"><a href="javascript:void(0);" class="back-btn" onclick="showPage('page-home')"><i class="fa-solid fa-arrow-left"></i> Quay lại</a><a href="javascript:void(0);" class="how-to-btn" onclick="openModal('modal-app')">Cách Cài</a></div>
             <div class="page-title">DANH MỤC MENU</div>
             <div id="firebase-menu-list"><p style="text-align:center; color:#aaa;">Đang tải...</p></div>
         </div>
 
+        <!-- TRANG CON: ĐỊNH VỊ -->
         <div id="page-dinhvi" class="page">
             <div class="page-header"><a href="javascript:void(0);" class="back-btn" onclick="showPage('page-home')"><i class="fa-solid fa-arrow-left"></i> Quay lại</a><a href="javascript:void(0);" class="how-to-btn" onclick="openModal('modal-file')">Cách Cài</a></div>
             <div class="page-title">DANH MỤC ĐỊNH VỊ</div>
             <div id="firebase-dinhvi-list"><p style="text-align:center; color:#aaa;">Đang tải...</p></div>
         </div>
 
+        <!-- TRANG CON: MOD SKIN -->
         <div id="page-skin" class="page">
             <div class="page-header"><a href="javascript:void(0);" class="back-btn" onclick="showPage('page-home')"><i class="fa-solid fa-arrow-left"></i> Quay lại</a><a href="javascript:void(0);" class="how-to-btn" onclick="openModal('modal-file')">Cách Cài</a></div>
             <div class="page-title">DANH MỤC MOD SKIN</div>
@@ -223,6 +239,7 @@
         </div>
     </div>
 
+    <!-- POPUP CHỌN LINK -->
     <div class="link-modal" id="link-choice-modal">
         <div class="link-modal-content">
             <div class="link-modal-title">CHỌN LINK TẢI XUỐNG</div>
@@ -232,6 +249,7 @@
         </div>
     </div>
 
+    <!-- POPUP HƯỚNG DẪN -->
     <div class="modal-overlay" id="modal-app">
         <div class="modal-content">
             <div class="modal-title">HƯỚNG DẪN CÀI APP</div>
@@ -252,7 +270,7 @@
             let pages = document.querySelectorAll('.page');
             pages.forEach(page => { page.style.display = 'none'; });
             let selectedPage = document.getElementById(pageId);
-            if (selectedPage) { selectedPage.style.display = 'block'; }
+            if (selectedPage) { selectedPage.style.display = 'flex'; }
         }
 
         function openModal(modalId) { let modal = document.getElementById(modalId); if(modal) modal.classList.add('active'); }
@@ -264,7 +282,7 @@
                 window.open(old_link, '_blank');
                 return;
             }
-            
+
             if (link_main && link_sub) {
                 document.getElementById('btn-choice-main').href = link_main;
                 document.getElementById('btn-choice-sub').href = link_sub;
@@ -277,33 +295,69 @@
                 alert("File này đang cập nhật!");
             }
         }
+    </script>
+
+    <!-- --- THEO DÕI LƯỢT TRUY CẬP + ONLINE --- -->
+    <script type="module">
+        function getTodayStr() {
+            const d = new Date();
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${y}-${m}-${day}`;
+        }
+
+        function getSessionId() {
+            let sid = sessionStorage.getItem('sq_session_id');
+            if (!sid) {
+                sid = 'sess_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
+                sessionStorage.setItem('sq_session_id', sid);
+            }
+            return sid;
+        }
 
         async function loadSettingsAndStats() {
-            const { doc, getDoc, updateDoc, increment } = window.fbTools;
+            const { doc, getDoc, setDoc, updateDoc, increment } = window.fbTools;
             try {
                 const docSnap = await getDoc(doc(window.db, "settings", "socials"));
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-                    if(data.telegram) document.getElementById('link-tg').href = data.telegram;
-                    if(data.youtube) document.getElementById('link-yt').href = data.youtube;
-                    if(data.tiktok) document.getElementById('link-tt').href = data.tiktok;
+                    if (data.telegram) document.getElementById('link-tg').href = data.telegram;
+                    if (data.youtube) document.getElementById('link-yt').href = data.youtube;
+                    if (data.tiktok) document.getElementById('link-tt').href = data.tiktok;
                 }
 
                 const statsRef = doc(window.db, "settings", "visits");
                 await updateDoc(statsRef, { total: increment(1) });
-            } catch(e) { console.log("Lỗi settings/stats: ", e); }
+
+                const todayRef = doc(window.db, "visits_daily", getTodayStr());
+                const todaySnap = await getDoc(todayRef);
+                if (todaySnap.exists()) {
+                    await updateDoc(todayRef, { count: increment(1) });
+                } else {
+                    await setDoc(todayRef, { count: 1, date: getTodayStr() });
+                }
+            } catch (e) { console.log("Lỗi settings/stats: ", e); }
+        }
+
+        async function sendHeartbeat() {
+            const { doc, setDoc } = window.fbTools;
+            try {
+                const sid = getSessionId();
+                await setDoc(doc(window.db, "presence", sid), { lastSeen: Date.now() });
+            } catch (e) { console.log("Lỗi heartbeat: ", e); }
         }
 
         async function loadModsFromFirebase() {
-            if (!window.db) return; 
+            if (!window.db) return;
             const { collection, getDocs } = window.fbTools;
-            
+
             try {
                 const querySnapshot = await getDocs(collection(window.db, "mods"));
                 const listMenu = document.getElementById('firebase-menu-list');
                 const listDinhVi = document.getElementById('firebase-dinhvi-list');
                 const listSkin = document.getElementById('firebase-skin-list');
-                
+
                 listMenu.innerHTML = ''; listDinhVi.innerHTML = ''; listSkin.innerHTML = '';
 
                 if (querySnapshot.empty) {
@@ -313,35 +367,9 @@
                     return;
                 }
 
-                querySnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    
+                querySnapshot.forEach((d) => {
+                    const data = d.data();
+
                     const lMain = data.link_main ? `'${data.link_main}'` : 'null';
                     const lSub = data.link_sub ? `'${data.link_sub}'` : 'null';
-                    const lOld = data.link ? `'${data.link}'` : 'null';
-
-                    const itemHTML = `
-                        <div class="item-card" onclick="handleDownload(${lMain}, ${lSub}, ${lOld})">
-                            <span class="badge-ffth">FFTH</span>
-                            <img src="${data.img}" onerror="this.src='https://i.ibb.co/0VKpd4C4/file-00000000031081fab71b349b2f53c583.png'" class="item-img" alt="${data.name}">
-                            <div class="item-info">
-                                <div class="item-title">${data.name}</div>
-                                <div class="item-desc">Bấm để tải xuống</div>
-                            </div>
-                        </div>
-                    `;
-
-                    if(data.category === 'page-proxy') { listMenu.insertAdjacentHTML('beforeend', itemHTML); } 
-                    else if(data.category === 'page-dinhvi') { listDinhVi.insertAdjacentHTML('beforeend', itemHTML); } 
-                    else { listSkin.insertAdjacentHTML('beforeend', itemHTML); }
-                });
-            } catch (error) { console.error("Lỗi tải dữ liệu: ", error); }
-        }
-
-        setTimeout(() => {
-            loadSettingsAndStats();
-            loadModsFromFirebase();
-        }, 1000);
-    </script>
-</body>
-</html>
+  
