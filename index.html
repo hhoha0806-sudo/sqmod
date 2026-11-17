@@ -33,26 +33,19 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        html, body {
-            height: 100%;
-        }
-
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-image: url('https://i.ibb.co/0VKpd4C4/file-00000000031081fab71b349b2f53c583.png');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
-            height: 100vh;
-            height: 100dvh;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: flex-start;
             padding: 40px 20px;
             color: #fff;
-            overflow: hidden;
-            overscroll-behavior: none;
-            touch-action: none;
+            overflow-x: hidden;
         }
 
         body::before {
@@ -66,7 +59,6 @@
         .glass-container {
             width: 100%;
             max-width: 400px;
-            max-height: 100%;
             background: rgba(15, 15, 20, 0.85);
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 30px;
@@ -74,9 +66,6 @@
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
             text-align: center;
             position: relative;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
         }
 
         .logo-wrapper {
@@ -113,13 +102,8 @@
 
         .subtitle { font-size: 13px; color: #00e5ff; margin-bottom: 30px; letter-spacing: 1px; text-transform: uppercase; }
 
-        .page { display: none; flex-direction: column; flex: 1; min-height: 0; }
-        #page-home {
-            display: flex;
-            overflow-y: auto;
-            overscroll-behavior: contain;
-            touch-action: pan-y;
-        }
+        .page { display: none; }
+        #page-home { display: block; }
 
         .main-category-btn {
             display: flex; align-items: center; justify-content: space-between;
@@ -134,7 +118,7 @@
         .main-category-title { font-family: 'Orbitron', sans-serif; font-size: 18px; font-weight: 700; color: #00e5ff; display: flex; align-items: center; gap: 10px; }
         .main-category-btn .fa-chevron-right { color: #aaa; font-size: 16px; }
 
-        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-shrink: 0; }
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .back-btn, .how-to-btn {
             display: inline-flex; align-items: center;
             background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255,255,255,0.2);
@@ -145,18 +129,9 @@
         .back-btn i { margin-right: 8px; }
         .how-to-btn { color: #ffd700; border-color: rgba(255, 215, 0, 0.4); }
 
-        .page-title { font-family: 'Orbitron', sans-serif; font-size: 20px; color: #00e5ff; margin-bottom: 20px; text-align: left; flex-shrink: 0; }
+        .page-title { font-family: 'Orbitron', sans-serif; font-size: 20px; color: #00e5ff; margin-bottom: 20px; text-align: left; }
 
-        #firebase-menu-list, #firebase-dinhvi-list, #firebase-skin-list {
-            flex: 1;
-            min-height: 0;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            overscroll-behavior: contain;
-            touch-action: pan-y;
-            padding-right: 4px;
-        }
-
+        /* Thẻ Mod */
         .item-card {
             display: flex; align-items: center;
             background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1);
@@ -177,6 +152,7 @@
 
         .footer-text { font-size: 11px; color: #777; margin-top: 25px; text-transform: uppercase; }
 
+        /* Popup Chọn Link */
         .link-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 999; justify-content: center; align-items: center; padding: 20px; }
         .link-modal.active { display: flex; }
         .link-modal-content { background: #151b2b; border: 1px solid #333; border-radius: 15px; padding: 25px; width: 100%; max-width: 350px; text-align: center; }
@@ -186,6 +162,7 @@
         .btn-sub-link { background: #1f6feb; color: #fff; }
         .btn-cancel-link { background: transparent; color: #aaa; border: 1px solid #444; margin-top: 10px;}
 
+        /* Popup Hướng dẫn */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 999; justify-content: center; align-items: center; padding: 20px; }
         .modal-overlay.active { display: flex; }
         .modal-content { background: #111; border: 1px solid #333; border-radius: 20px; padding: 25px; max-width: 350px; width: 100%; text-align: left; }
@@ -270,13 +247,14 @@
             let pages = document.querySelectorAll('.page');
             pages.forEach(page => { page.style.display = 'none'; });
             let selectedPage = document.getElementById(pageId);
-            if (selectedPage) { selectedPage.style.display = 'flex'; }
+            if (selectedPage) { selectedPage.style.display = 'block'; }
         }
 
         function openModal(modalId) { let modal = document.getElementById(modalId); if(modal) modal.classList.add('active'); }
         function closeModal(modalId) { let modal = document.getElementById(modalId); if(modal) modal.classList.remove('active'); }
         function closeLinkModal() { document.getElementById('link-choice-modal').classList.remove('active'); }
 
+        // Xử lý tải file (Hỗ trợ cả link cũ và link mới)
         window.handleDownload = function(link_main, link_sub, old_link) {
             if (!link_main && !link_sub && old_link) {
                 window.open(old_link, '_blank');
@@ -299,6 +277,7 @@
 
     <!-- --- THEO DÕI LƯỢT TRUY CẬP + ONLINE --- -->
     <script type="module">
+        // Chạy sau khi module Firebase ở trên đã khởi tạo window.db / window.fbTools
         function getTodayStr() {
             const d = new Date();
             const y = d.getFullYear();
@@ -316,6 +295,7 @@
             return sid;
         }
 
+        // Tải cấu hình mạng xã hội + cộng lượt xem (tổng + theo ngày)
         async function loadSettingsAndStats() {
             const { doc, getDoc, setDoc, updateDoc, increment } = window.fbTools;
             try {
@@ -327,9 +307,11 @@
                     if (data.tiktok) document.getElementById('link-tt').href = data.tiktok;
                 }
 
+                // Tổng lượt xem (giữ nguyên logic cũ)
                 const statsRef = doc(window.db, "settings", "visits");
                 await updateDoc(statsRef, { total: increment(1) });
 
+                // Lượt xem theo ngày (mới)
                 const todayRef = doc(window.db, "visits_daily", getTodayStr());
                 const todaySnap = await getDoc(todayRef);
                 if (todaySnap.exists()) {
@@ -340,6 +322,7 @@
             } catch (e) { console.log("Lỗi settings/stats: ", e); }
         }
 
+        // Gửi "nhịp tim" báo đang online, lặp lại mỗi 20 giây
         async function sendHeartbeat() {
             const { doc, setDoc } = window.fbTools;
             try {
@@ -348,6 +331,7 @@
             } catch (e) { console.log("Lỗi heartbeat: ", e); }
         }
 
+        // Tải dữ liệu Mod
         async function loadModsFromFirebase() {
             if (!window.db) return;
             const { collection, getDocs } = window.fbTools;
@@ -372,4 +356,9 @@
 
                     const lMain = data.link_main ? `'${data.link_main}'` : 'null';
                     const lSub = data.link_sub ? `'${data.link_sub}'` : 'null';
-  
+                    const lOld = data.link ? `'${data.link}'` : 'null';
+
+                    const itemHTML = `
+                        <div class="item-card" onclick="handleDownload(${lMain}, ${lSub}, ${lOld})">
+                            <span class="badge-ffth">FFTH</span>
+                            <imgw
